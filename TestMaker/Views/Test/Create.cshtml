@@ -1,0 +1,42 @@
+﻿@model TestMaker.Models.ViewModels.TestViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Test</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tests.Question" class="control-label"></label>
+                <input asp-for="Tests.Question" class="form-control" />
+                <span asp-validation-for="Tests.Question" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @for (var i = 0; i < 4; i++)
+                {
+                    <label asp-for="Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
+                    <div class="form-inline">
+                        <input asp-for="Choices[i].ChoiceText" class="form-control" />
+                            @Html.CheckBoxFor(
+                                model => model.Choices[i].IsAnswer,
+                                new { @class = "ml-2" }
+                            )
+                        <span asp-validation-for="Choices[i].ChoiceText" class="text-danger"></span>
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
