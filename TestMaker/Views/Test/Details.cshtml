@@ -1,4 +1,4 @@
-﻿@model TestMaker.Models.Test
+﻿@model TestMaker.Models.ViewModels.TestViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -9,16 +9,39 @@
 <div>
     <h4>Test</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Question)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Question)
-        </dd>
-    </dl>
+    @foreach(var q in Model.Questions)
+    {
+        <div class="container">
+            <div class="mb-5">
+                @Html.DisplayFor(model => q.QuestionText)
+            </div>
+            <div class="mb-5">
+                @if (Model.Choices
+                   .Where(o => o.QuestionId == q.QuestionId)
+                   .Count(o => o.IsAnswer) > 1)
+                {
+                    @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
+                    {
+                        <div>
+                            <input type="checkbox" name="choice_@(q.QuestionId)" />
+                            @Html.DisplayFor(model => c.ChoiceText)
+                        </div>
+                    }
+                }
+                else
+                {
+                    @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
+                    {
+                        <div>
+                            <input type="radio" name="choice_@(q.QuestionId)" />
+                            @Html.DisplayFor(model => c.ChoiceText)
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+<div>|
     <a asp-action="Index">Back to List</a>
 </div>

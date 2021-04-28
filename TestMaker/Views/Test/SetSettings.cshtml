@@ -1,0 +1,33 @@
+﻿@model TestMaker.Models.ViewModels.TestViewModel
+
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<h1>Set question settings</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tests.Title" class="control-label"></label>
+                <input type="text" name="title" class="form-control" />
+                <span asp-validation-for="Tests.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tests.Number" class="control-label">Number</label>
+                <input type="number" name="number" class="form-control" />
+                <span asp-validation-for="Tests.Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Next" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

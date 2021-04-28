@@ -27,15 +27,21 @@ namespace TestMaker.Controllers
         }
 
         // GET: Test/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var test = await _context.Tests
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var test = new TestViewModel
+            {
+                Tests = _context.Tests
+                    .FirstOrDefault(m => m.TestId == id),
+                Questions = _context.Questions
+                    .Where(m => m.TestId == id).ToList(),
+                Choices = _context.Choices
+                    .Where(m => m.Question.TestId == id).ToList()
+            };
             if (test == null)
             {
                 return NotFound();
@@ -44,9 +50,16 @@ namespace TestMaker.Controllers
             return View(test);
         }
 
-        // GET: Test/Create
-        public IActionResult Create()
+        public IActionResult SetSettings()
         {
+            return View();
+        }
+
+        // GET: Test/Create
+        public IActionResult Create([FromQuery]string title,[FromQuery]string number)
+        {
+            ViewData["Title"] = title;
+            ViewData["Number"] = number;
             return View();
         }
 
@@ -55,20 +68,24 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(TestViewModel testViewModel)
+        public IActionResult Create([Bind("Tests")]TestViewModel testViewModel)
         {
             if (ModelState.IsValid)
             {
-                //var sql = new CreateQuestion("Data Source=./../TestMakerSqlite/TestMaker.db");
-                //sql.Create(testViewModel);
+                ViewData["Title"] = testViewModel.Tests.Title;
+                ViewData["Number"] = testViewModel.Tests.Number;
+                testViewModel.Tests.CreatedTime = DateTime.Now;
                 _context.Tests.Add(testViewModel.Tests);
-                foreach(var c in testViewModel.Choices)
+                foreach(var q in testViewModel.Tests.Questions)
                 {
-                    c.Test = testViewModel.Tests;
-                    _context.Choices.Add(c);
+                    _context.Questions.Add(q);
+                    foreach(var c in q.Choices)
+                    {
+                        _context.Choices.Add(c);
+                    }
                 }
                 _context.SaveChanges();
-                return View(testViewModel);
+                return RedirectToAction("Index", "Home");
             }
             return View(testViewModel);
         }
@@ -94,9 +111,9 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TestId,Question,Answer")] Test test)
+        public async Task<IActionResult> Edit(int id, [Bind("TestId,Question,Answer")] Question question)
         {
-            if (id != test.Id)
+            if (id != question.QuestionId)
             {
                 return NotFound();
             }
@@ -105,12 +122,12 @@ namespace TestMaker.Controllers
             {
                 try
                 {
-                    _context.Update(test);
+                    _context.Update(question);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TestExists(test.Id))
+                    if (!TestExists(question.QuestionId))
                     {
                         return NotFound();
                     }
@@ -121,7 +138,7 @@ namespace TestMaker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(test);
+            return View(question);
         }
 
         // GET: Test/Delete/5
@@ -132,8 +149,8 @@ namespace TestMaker.Controllers
                 return NotFound();
             }
 
-            var test = await _context.Tests
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var test = await _context.Questions
+                .FirstOrDefaultAsync(m => m.QuestionId == id);
             if (test == null)
             {
                 return NotFound();
@@ -155,7 +172,7 @@ namespace TestMaker.Controllers
 
         private bool TestExists(int id)
         {
-            return _context.Tests.Any(e => e.Id == id);
+            return _context.Tests.Any(e => e.TestId == id);
         }
     }
 }
