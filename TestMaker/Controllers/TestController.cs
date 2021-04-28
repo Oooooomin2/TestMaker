@@ -70,10 +70,10 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Tests")]TestViewModel testViewModel)
         {
+            ViewData["Title"] = testViewModel.Tests.Title;
+            ViewData["Number"] = testViewModel.Tests.Number;
             if (ModelState.IsValid)
             {
-                ViewData["Title"] = testViewModel.Tests.Title;
-                ViewData["Number"] = testViewModel.Tests.Number;
                 testViewModel.Tests.CreatedTime = DateTime.Now;
                 _context.Tests.Add(testViewModel.Tests);
                 foreach(var q in testViewModel.Tests.Questions)

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using TestMaker.Validations;
 
 namespace TestMaker.Models
 {
@@ -16,6 +17,7 @@ namespace TestMaker.Models
         public int TestId { get; set; }
         public Test Test { get; set; }
 
+        [Choices]
         public IList<Choice> Choices { get; set; }
     }
 }
