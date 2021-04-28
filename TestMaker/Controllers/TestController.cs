@@ -68,26 +68,24 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(TestViewModel testViewModel)
+        public IActionResult Create([Bind("Tests")]TestViewModel testViewModel)
         {
             if (ModelState.IsValid)
             {
                 ViewData["Title"] = testViewModel.Tests.Title;
                 ViewData["Number"] = testViewModel.Tests.Number;
+                testViewModel.Tests.CreatedTime = DateTime.Now;
                 _context.Tests.Add(testViewModel.Tests);
-                foreach(var q in testViewModel.Questions)
+                foreach(var q in testViewModel.Tests.Questions)
                 {
-                    q.Test = testViewModel.Tests;
                     _context.Questions.Add(q);
-                    foreach(var c in testViewModel.Choices)
+                    foreach(var c in q.Choices)
                     {
-                        c.Question = q;
                         _context.Choices.Add(c);
                     }
                 }
                 _context.SaveChanges();
                 return RedirectToAction("Index", "Home");
-                //return View(testViewModel);
             }
             return View(testViewModel);
         }

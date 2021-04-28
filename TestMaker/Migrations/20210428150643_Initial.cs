@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TestMaker.Migrations
 {
@@ -13,7 +14,8 @@ namespace TestMaker.Migrations
                     TestId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Number = table.Column<int>(type: "INTEGER", nullable: false)
+                    Number = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

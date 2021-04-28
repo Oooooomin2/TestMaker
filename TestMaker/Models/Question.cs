@@ -16,6 +16,6 @@ namespace TestMaker.Models
         public int TestId { get; set; }
         public Test Test { get; set; }
 
-        public ICollection<Choice> Choices { get; set; }
+        public IList<Choice> Choices { get; set; }
     }
 }

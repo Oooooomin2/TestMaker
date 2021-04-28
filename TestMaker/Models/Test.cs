@@ -10,7 +10,8 @@ namespace TestMaker.Models
         public int TestId { get; set; }
         public string Title { get; set; }
         public int Number { get; set; }
+        public DateTime CreatedTime { get; set; }
 
-        public ICollection<Question> Questions { get; set; }
+        public IList<Question> Questions { get; set; }
     }
 }
