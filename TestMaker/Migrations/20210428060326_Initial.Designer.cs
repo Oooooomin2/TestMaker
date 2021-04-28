@@ -8,7 +8,7 @@ using TestMaker.Data;
 namespace TestMaker.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210427122613_Initial")]
+    [Migration("20210428060326_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,34 +29,67 @@ namespace TestMaker.Migrations
                     b.Property<bool>("IsAnswer")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TestId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ChoiceId");
 
-                    b.HasIndex("TestId");
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("Choices");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Test", b =>
+            modelBuilder.Entity("TestMaker.Models.Question", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Question")
+                    b.Property<string>("QuestionText")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.Property<int>("TestId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("QuestionId");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("TestMaker.Models.Test", b =>
+                {
+                    b.Property<int>("TestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TestId");
 
                     b.ToTable("Tests");
                 });
 
             modelBuilder.Entity("TestMaker.Models.Choice", b =>
                 {
-                    b.HasOne("TestMaker.Models.Test", "Test")
+                    b.HasOne("TestMaker.Models.Question", "Question")
                         .WithMany("Choices")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("TestMaker.Models.Question", b =>
+                {
+                    b.HasOne("TestMaker.Models.Test", "Test")
+                        .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -64,9 +97,14 @@ namespace TestMaker.Migrations
                     b.Navigation("Test");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Test", b =>
+            modelBuilder.Entity("TestMaker.Models.Question", b =>
                 {
                     b.Navigation("Choices");
+                });
+
+            modelBuilder.Entity("TestMaker.Models.Test", b =>
+                {
+                    b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618
         }

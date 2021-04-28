@@ -1,35 +1,46 @@
 ﻿@model TestMaker.Models.ViewModels.TestViewModel
 
-@{
-    ViewData["Title"] = "Create";
+@{ 
+    var test = new Test
+    {
+        Title = ViewData["Title"].ToString(),
+        Number = Int32.Parse(ViewData["Number"].ToString())
+    }; 
 }
 
 <h1>Create Test</h1>
+<h4>@ViewData["Title"]</h4>
 
 <hr />
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Tests.Question" class="control-label"></label>
-                <input asp-for="Tests.Question" class="form-control" />
-                <span asp-validation-for="Tests.Question" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @for (var i = 0; i < 4; i++)
-                {
-                    <label asp-for="Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
-                    <div class="form-inline">
-                        <input asp-for="Choices[i].ChoiceText" class="form-control" />
+            <input type="hidden" asp-for="Tests.Title" value="@test.Title" />
+            <input type="hidden" asp-for="Tests.Number" value="@test.Number" />
+            @for (var q = 0; q < @test.Number; q++)
+            {
+                <div class="form-group">
+                    <label asp-for="Questions[q].QuestionText" class="control-label"></label>
+                    <input asp-for="Questions[q].QuestionText" class="form-control" />
+                    <span asp-validation-for="Questions[q].QuestionText" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @for (var i = 0; i < 4; i++)
+                    {
+                        <label asp-for="Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
+                        <div class="form-inline">
+                            <input asp-for="Choices[i].ChoiceText" class="form-control" />
                             @Html.CheckBoxFor(
                                 model => model.Choices[i].IsAnswer,
                                 new { @class = "ml-2" }
                             )
-                        <span asp-validation-for="Choices[i].ChoiceText" class="text-danger"></span>
-                    </div>
-                }
-            </div>
+                            <span asp-validation-for="Choices[i].ChoiceText" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+                <hr />
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
