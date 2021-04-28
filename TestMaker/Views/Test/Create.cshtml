@@ -35,9 +35,9 @@
                                 model => model.Tests.Questions[q].Choices[i].IsAnswer,
                                 new { @class = "ml-2" }
                             )
-                            <span asp-validation-for="Tests.Questions[q].Choices[i].ChoiceText" class="text-danger"></span>
                         </div>
                     }
+                    <span asp-validation-for="Tests.Questions[q].Choices" class="text-danger"></span>
                 </div>
                 <hr />
             }
