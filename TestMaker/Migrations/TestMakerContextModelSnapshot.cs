@@ -77,6 +77,26 @@ namespace TestMaker.Migrations
                     b.ToTable("Tests");
                 });
 
+            modelBuilder.Entity("TestMaker.Models.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LoginId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("TestMaker.Models.Choice", b =>
                 {
                     b.HasOne("TestMaker.Models.Question", "Question")

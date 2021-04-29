@@ -17,12 +17,14 @@ namespace TestMaker.Data
         public DbSet<Test> Tests { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Choice> Choices { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Test>().ToTable("Tests");
             modelBuilder.Entity<Question>().ToTable("Questions");
             modelBuilder.Entity<Choice>().ToTable("Choices");
+            modelBuilder.Entity<User>().ToTable("Users");
         }
     }
 }
