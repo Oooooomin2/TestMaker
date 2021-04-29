@@ -15,6 +15,7 @@
             "Test",
             new { id = Model.Tests.TestId },
             new { @class = "btn btn-primary col-1" })
+        <div class="col-6">Created time: @(Model.Tests.CreatedTime)</div>
     </div>
     <hr />
     @foreach(var q in Model.Questions)

@@ -72,6 +72,9 @@ namespace TestMaker.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("TestId");
 
                     b.ToTable("Tests");
@@ -84,9 +87,11 @@ namespace TestMaker.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LoginId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")

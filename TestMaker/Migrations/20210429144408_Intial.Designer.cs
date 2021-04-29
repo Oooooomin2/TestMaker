@@ -9,8 +9,8 @@ using TestMaker.Data;
 namespace TestMaker.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210429113237_Initial")]
-    partial class Initial
+    [Migration("20210429144408_Intial")]
+    partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,6 +74,9 @@ namespace TestMaker.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("TestId");
 
                     b.ToTable("Tests");
@@ -86,9 +89,11 @@ namespace TestMaker.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LoginId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")

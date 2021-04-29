@@ -77,6 +77,7 @@ namespace TestMaker.Controllers
             if (ModelState.IsValid)
             {
                 testViewModel.Tests.CreatedTime = DateTime.Now;
+                testViewModel.Tests.UpdatedTime = DateTime.Now;
                 _context.Tests.Add(testViewModel.Tests);
                 foreach(var q in testViewModel.Tests.Questions)
                 {
@@ -132,6 +133,7 @@ namespace TestMaker.Controllers
             {
                 try
                 {
+                    testViewModel.Tests.UpdatedTime = DateTime.Now;
                     _context.Tests.Update(testViewModel.Tests);
                     foreach (var q in testViewModel.Tests.Questions)
                     {
