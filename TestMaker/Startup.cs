@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TestMaker.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.CookiePolicy;
 
 namespace TestMaker
 {
@@ -26,9 +29,25 @@ namespace TestMaker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.Configure<CookiePolicyOptions>(options => {
+                options.CheckConsentNeeded = context => !context.User.Identity.IsAuthenticated;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.Secure = CookieSecurePolicy.Always;
+                options.HttpOnly = HttpOnlyPolicy.Always;
+            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.Cookie.Name = "TestMaker";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    options.SlidingExpiration = true;
+                    options.AccessDeniedPath = new PathString("/Account/Denied");
+                    options.ReturnUrlParameter = "ReturnUrl";
+                });
             services.AddDbContext<TestMakerContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("TestMakerContext")));
+                options.UseSqlite(Configuration.GetConnectionString("TestMakerContext")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +67,8 @@ namespace TestMaker
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
