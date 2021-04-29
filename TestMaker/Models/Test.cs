@@ -11,6 +11,7 @@ namespace TestMaker.Models
         public string Title { get; set; }
         public int Number { get; set; }
         public DateTime CreatedTime { get; set; }
+        public DateTime UpdatedTime { get; set; }
 
         public IList<Question> Questions { get; set; }
     }
