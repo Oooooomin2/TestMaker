@@ -91,14 +91,22 @@ namespace TestMaker.Controllers
         }
 
         // GET: Test/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var test = await _context.Tests.FindAsync(id);
+            var test = new TestViewModel
+            {
+                Tests = _context.Tests
+                    .FirstOrDefault(m => m.TestId == id),
+                Questions = _context.Questions
+                    .Where(m => m.TestId == id).ToList(),
+                Choices = _context.Choices
+                    .Where(m => m.Question.TestId == id).ToList()
+            };
             if (test == null)
             {
                 return NotFound();
@@ -111,9 +119,9 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TestId,Question,Answer")] Question question)
+        public async Task<IActionResult> Edit(int id, [Bind("Tests")]TestViewModel testViewModel)
         {
-            if (id != question.QuestionId)
+            if (id != testViewModel.Tests.TestId)
             {
                 return NotFound();
             }
@@ -122,12 +130,20 @@ namespace TestMaker.Controllers
             {
                 try
                 {
-                    _context.Update(question);
+                    _context.Tests.Update(testViewModel.Tests);
+                    foreach (var q in testViewModel.Tests.Questions)
+                    {
+                        _context.Questions.Update(q);
+                        foreach (var c in q.Choices)
+                        {
+                            _context.Choices.Update(c);
+                        }
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TestExists(question.QuestionId))
+                    if (!TestExists(testViewModel.Tests.TestId))
                     {
                         return NotFound();
                     }
@@ -138,7 +154,7 @@ namespace TestMaker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(question);
+            return View(testViewModel);
         }
 
         // GET: Test/Delete/5
