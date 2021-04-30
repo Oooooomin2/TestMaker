@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestMaker.Models.Test>
+﻿@model TestMaker.Models.ViewModels.UserTestViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedTime)
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().UpdatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.UserName)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) 
+        @foreach (var item in Model.Tests) 
         {
             <tr>
                 <td>
@@ -30,6 +33,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UpdatedTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.User.UserName)
                 </td>
             </tr>
         }

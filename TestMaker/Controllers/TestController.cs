@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,15 @@ namespace TestMaker.Controllers
         }
 
         // GET: Test
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Tests.ToListAsync());
+            var index = new UserTestViewModel
+            {
+                Tests = _context.Tests.Where(m => m.UserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList(),
+                User = _context.Users
+                    .FirstOrDefault(m => m.UserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            };
+            return View(index);
         }
 
         // GET: Test/Details/5

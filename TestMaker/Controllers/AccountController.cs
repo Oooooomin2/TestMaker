@@ -38,7 +38,7 @@ namespace TestMaker.Controllers
                 if (userInfo != null)
                 {
                     Claim[] claims = {
-                        new Claim(ClaimTypes.NameIdentifier, userInfo.LoginId),
+                        new Claim(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
                         new Claim(ClaimTypes.Name, userInfo.UserName),
                     };
 
