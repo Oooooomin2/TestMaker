@@ -75,7 +75,12 @@ namespace TestMaker.Migrations
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("TestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tests");
                 });
@@ -124,6 +129,17 @@ namespace TestMaker.Migrations
                     b.Navigation("Test");
                 });
 
+            modelBuilder.Entity("TestMaker.Models.Test", b =>
+                {
+                    b.HasOne("TestMaker.Models.User", "User")
+                        .WithMany("Tests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TestMaker.Models.Question", b =>
                 {
                     b.Navigation("Choices");
@@ -132,6 +148,11 @@ namespace TestMaker.Migrations
             modelBuilder.Entity("TestMaker.Models.Test", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("TestMaker.Models.User", b =>
+                {
+                    b.Navigation("Tests");
                 });
 #pragma warning restore 612, 618
         }

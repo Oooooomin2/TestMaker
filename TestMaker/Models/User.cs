@@ -16,5 +16,7 @@ namespace TestMaker.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public ICollection<Test> Tests { get; set; }
     }
 }

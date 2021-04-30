@@ -5,7 +5,7 @@
     {
         Title = ViewData["Title"].ToString(),
         Number = Int32.Parse(ViewData["Number"].ToString())
-    }; 
+    };
 }
 
 <h1>Create Test</h1>
@@ -16,6 +16,7 @@
     <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Tests.UserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value" />
             <input type="hidden" asp-for="Tests.Title" value="@test.Title" />
             <input type="hidden" asp-for="Tests.Number" value="@test.Number" />
             @for (var q = 0; q < @test.Number; q++)
