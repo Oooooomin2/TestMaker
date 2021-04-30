@@ -9,28 +9,18 @@
 <div>
     <h4>User</h4>
     <hr />
+    <input type="hidden" asp-for="UserId" />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LoginId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LoginId)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UserName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
         </dd>
     </dl>
 </div>
 <div>
+    <a asp-action="index" asp-controller="Test" asp-route-id="@Model.UserId">Show questions this user created</a> |
     <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

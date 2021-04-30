@@ -1,7 +1,43 @@
-﻿@{
+﻿@model TestMaker.Models.ViewModels.HomeIndexViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Create Question</h1>
-</div>
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().UpdatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users.FirstOrDefault().UserName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Tests)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-controller="Test" asp-route-id="@item.TestId">@item.Title</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedTime)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="User" asp-route-id="@item.UserId">@Model.Users.FirstOrDefault(o => o.UserId == item.UserId).UserName</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

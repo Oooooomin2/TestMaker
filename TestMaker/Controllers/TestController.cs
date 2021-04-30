@@ -22,14 +22,14 @@ namespace TestMaker.Controllers
             _context = context;
         }
 
-        // GET: Test
-        public IActionResult Index()
+        // GET: Test/Index/5
+        public IActionResult Index(int? id)
         {
             var index = new UserTestViewModel
             {
-                Tests = _context.Tests.Where(m => m.UserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList(),
+                Tests = _context.Tests.Where(m => m.UserId == id).ToList(),
                 User = _context.Users
-                    .FirstOrDefault(m => m.UserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                    .FirstOrDefault(m => m.UserId == id)
             };
             return View(index);
         }

@@ -35,7 +35,7 @@
                     @Html.DisplayFor(modelItem => item.UpdatedTime)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.User.UserName)
+                    <a asp-action="Details" asp-controller="User" asp-route-id="@item.UserId">@Model.User.UserName</a>
                 </td>
             </tr>
         }
