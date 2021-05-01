@@ -12,6 +12,7 @@
     <div class="col-md-6">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Tests.UserId" />
             <input type="hidden" asp-for="Tests.TestId" />
             <input type="hidden" asp-for="Tests.Number" />
             <input type="hidden" asp-for="Tests.CreatedTime" />
@@ -30,17 +31,17 @@
                 </div>
                 <div class="form-group">
                     @for (var i = 0; i < 4; i++)
-                        {
-                    <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
-                    <label asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
-                    <div class="form-inline">
-                        <input asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="form-control" />
-                        @Html.CheckBoxFor(
-                            model => model.Tests.Questions[q].Choices[i].IsAnswer,
-                            new { @class = "ml-2" }
-                        )
-                    </div>
-                        }
+                    {
+                        <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
+                        <label asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
+                        <div class="form-inline">
+                            <input asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="form-control" />
+                            @Html.CheckBoxFor(
+                                model => model.Tests.Questions[q].Choices[i].IsAnswer,
+                                new { @class = "ml-2" }
+                            )
+                        </div>
+                    }
                     <span asp-validation-for="Tests.Questions[q].Choices" class="text-danger"></span>
                 </div>
                 <hr />
