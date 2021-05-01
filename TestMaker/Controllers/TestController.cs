@@ -176,8 +176,8 @@ namespace TestMaker.Controllers
                 return NotFound();
             }
 
-            var test = await _context.Questions
-                .FirstOrDefaultAsync(m => m.QuestionId == id);
+            var test = await _context.Tests
+                .FirstOrDefaultAsync(m => m.TestId == id);
             if (test == null)
             {
                 return NotFound();

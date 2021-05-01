@@ -9,51 +9,61 @@
 <div>
     <div class="row">
         <h4 class="col-2">Test</h4>
-        @if(Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+        @if (Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
         {
-            @Html.ActionLink(
-                "Edit",
-                "Edit",
-                "Test",
-                new { id = Model.Tests.TestId },
-                new { @class = "btn btn-primary col-1" })
+            <div class="col-1">
+                @Html.ActionLink(
+                    "Edit",
+                    "Edit",
+                    "Test",
+                    new { id = Model.Tests.TestId },
+                    new { @class = "btn btn-primary" })
+            </div>
+            <div class="col-1">
+                @Html.ActionLink(
+                    "Delete",
+                    "Delete",
+                    "Test",
+                    new { id = Model.Tests.TestId },
+                    new { @class = "btn btn-danger" })
+            </div>
         }
-        <div class="col-6">Created time: @(Model.Tests.CreatedTime)</div>
-    </div>
-    <hr />
-    @foreach(var q in Model.Questions)
-    {
-        <div class="container">
-            <div class="mb-5">
-                @Html.DisplayFor(model => q.QuestionText)
-            </div>
-            <div class="mb-5">
-                @if (Model.Choices
-                   .Where(o => o.QuestionId == q.QuestionId)
-                   .Count(o => o.IsAnswer) > 1)
-                {
-                    @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
-                    {
-                        <div>
-                            <input type="checkbox" name="choice_@(q.QuestionId)" />
-                            @Html.DisplayFor(model => c.ChoiceText)
-                        </div>
-                    }
-                }
-                else
-                {
-                    @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
-                    {
-                        <div>
-                            <input type="radio" name="choice_@(q.QuestionId)" />
-                            @Html.DisplayFor(model => c.ChoiceText)
-                        </div>
-                    }
-                }
-            </div>
+        <div class="col-4">Created time: @(Model.Tests.CreatedTime)</div>
         </div>
-    }
-</div>
+        <hr />
+        @foreach (var q in Model.Questions)
+        {
+            <div class="container">
+                <div class="mb-5">
+                    @Html.DisplayFor(model => q.QuestionText)
+                </div>
+                <div class="mb-5">
+                    @if (Model.Choices
+                        .Where(o => o.QuestionId == q.QuestionId)
+                        .Count(o => o.IsAnswer) > 1)
+                    {
+                        @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
+                        {
+                            <div>
+                                <input type="checkbox" name="choice_@(q.QuestionId)" />
+                                @Html.DisplayFor(model => c.ChoiceText)
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
+                        {
+                            <div>
+                                <input type="radio" name="choice_@(q.QuestionId)" />
+                                @Html.DisplayFor(model => c.ChoiceText)
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
 <div>|
     <a asp-action="Index">Back to List</a>
 </div>
