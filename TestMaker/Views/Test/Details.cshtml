@@ -9,12 +9,15 @@
 <div>
     <div class="row">
         <h4 class="col-2">Test</h4>
-        @Html.ActionLink(
-            "Edit",
-            "Edit",
-            "Test",
-            new { id = Model.Tests.TestId },
-            new { @class = "btn btn-primary col-1" })
+        @if(Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+        {
+            @Html.ActionLink(
+                "Edit",
+                "Edit",
+                "Test",
+                new { id = Model.Tests.TestId },
+                new { @class = "btn btn-primary col-1" })
+        }
         <div class="col-6">Created time: @(Model.Tests.CreatedTime)</div>
     </div>
     <hr />
