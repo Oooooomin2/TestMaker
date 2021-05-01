@@ -13,6 +13,7 @@ using TestMaker.Models.ViewModels;
 
 namespace TestMaker.Controllers
 {
+    [Authorize]
     public class TestController : Controller
     {
         private readonly TestMakerContext _context;
@@ -58,7 +59,6 @@ namespace TestMaker.Controllers
             return View(test);
         }
 
-        [Authorize]
         public IActionResult SetSettings()
         {
             return View();

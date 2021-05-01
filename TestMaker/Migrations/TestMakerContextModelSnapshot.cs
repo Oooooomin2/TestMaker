@@ -91,12 +91,18 @@ namespace TestMaker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte[]>("Icon")
+                        .HasColumnType("BLOB");
+
                     b.Property<string>("LoginId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SelfIntroduction")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")

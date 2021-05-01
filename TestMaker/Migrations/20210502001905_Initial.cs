@@ -15,7 +15,9 @@ namespace TestMaker.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     LoginId = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    SelfIntroduction = table.Column<string>(type: "TEXT", nullable: true),
+                    Icon = table.Column<byte[]>(type: "BLOB", nullable: true)
                 },
                 constraints: table =>
                 {
