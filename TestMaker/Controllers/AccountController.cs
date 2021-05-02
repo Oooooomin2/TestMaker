@@ -30,13 +30,13 @@ namespace TestMaker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("LoginId,Password")] User user, string returnUrl = null)
+        public async Task<IActionResult> Login([Bind("LoginId,Password")] Login loginUser, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == user.LoginId);
+                var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == loginUser.LoginId);
                 var saltBytes = Password.ChangeFromBase64(userInfo.Salt);
-                var inputHashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+                var inputHashBytes = Password.CreatePBKDF2Hash(loginUser.Password, saltBytes, Password.hashSize, Password.iteration);
                 var inputHashText = Password.ChangeToBase64(inputHashBytes);
                 if (userInfo.Password == inputHashText)
                 {
@@ -55,10 +55,10 @@ namespace TestMaker.Controllers
                 }
                 else
                 {
-                    return View(user);
+                    return View(loginUser);
                 }
             }
-            return View(user);
+            return View(loginUser);
         }
 
         public async Task<IActionResult> Logout()
