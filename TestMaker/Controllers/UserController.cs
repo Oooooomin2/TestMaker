@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ using TestMaker.Models;
 
 namespace TestMaker.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly TestMakerContext _context;
@@ -46,6 +49,7 @@ namespace TestMaker.Controllers
             return View(user);
         }
 
+        [AllowAnonymous]
         // GET: Users/Create
         public IActionResult Create()
         {
@@ -55,6 +59,7 @@ namespace TestMaker.Controllers
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password")] User user)
@@ -63,7 +68,7 @@ namespace TestMaker.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login", "Account");
             }
             return View(user);
         }
@@ -89,7 +94,7 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,UserName,Password")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,UserName,Password,SelfIntroduction,Icon")] User user)
         {
             if (id != user.UserId)
             {
@@ -98,6 +103,12 @@ namespace TestMaker.Controllers
 
             if (ModelState.IsValid)
             {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await Request.Form.Files.FirstOrDefault().CopyToAsync(memoryStream);
+
+                    user.Icon = memoryStream.ToArray();
+                }
                 try
                 {
                     _context.Update(user);

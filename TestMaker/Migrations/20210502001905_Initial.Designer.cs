@@ -9,7 +9,7 @@ using TestMaker.Data;
 namespace TestMaker.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210430060221_Initial")]
+    [Migration("20210502001905_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,12 +93,18 @@ namespace TestMaker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte[]>("Icon")
+                        .HasColumnType("BLOB");
+
                     b.Property<string>("LoginId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SelfIntroduction")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
