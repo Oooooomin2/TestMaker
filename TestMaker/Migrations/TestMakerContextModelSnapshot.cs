@@ -102,6 +102,9 @@ namespace TestMaker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Salt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SelfIntroduction")
                         .HasColumnType("TEXT");
 

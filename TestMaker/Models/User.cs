@@ -17,6 +17,7 @@ namespace TestMaker.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public string Salt { get; set; }
         [Display(Name = "Self introduction")]
         public string SelfIntroduction { get; set; }
         public byte[] Icon { get; set; }

@@ -34,8 +34,11 @@ namespace TestMaker.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == user.LoginId && o.Password == user.Password);
-                if (userInfo != null)
+                var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == user.LoginId);
+                var saltBytes = Password.ChangeFromBase64(userInfo.Salt);
+                var inputHashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+                var inputHashText = Password.ChangeToBase64(inputHashBytes);
+                if (userInfo.Password == inputHashText)
                 {
                     Claim[] claims = {
                         new Claim(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
