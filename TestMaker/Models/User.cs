@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using TestMaker.Validations;
 
 namespace TestMaker.Models
 {
@@ -12,6 +13,7 @@ namespace TestMaker.Models
         public int UserId { get; set; }
         [Required]
         [EmailAddress]
+        [LoginIdUnique]
         public string LoginId { get; set; }
         public string UserName { get; set; }
         [Required]

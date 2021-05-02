@@ -64,6 +64,10 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password")] User user)
         {
+            if(_context.Users.Where(o => o.LoginId == user.LoginId).Any())
+            {
+                return View(user);
+            }
             if (ModelState.IsValid)
             {
                 var saltBytes = Password.CreateSalt(Password.saltSize);
@@ -115,6 +119,10 @@ namespace TestMaker.Controllers
                 }
                 try
                 {
+                    var saltBytes = Password.CreateSalt(Password.saltSize);
+                    var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+                    user.Salt = Password.ChangeToBase64(saltBytes);
+                    user.Password = Password.ChangeToBase64(hashBytes);
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
