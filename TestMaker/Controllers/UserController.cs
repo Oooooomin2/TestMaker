@@ -66,6 +66,10 @@ namespace TestMaker.Controllers
         {
             if (ModelState.IsValid)
             {
+                var saltBytes = Password.CreateSalt(Password.saltSize);
+                var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+                user.Salt = Password.ChangeToBase64(saltBytes);
+                user.Password = Password.ChangeToBase64(hashBytes);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Login", "Account");

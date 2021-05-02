@@ -9,7 +9,7 @@ using TestMaker.Data;
 namespace TestMaker.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210502001905_Initial")]
+    [Migration("20210502013748_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,9 @@ namespace TestMaker.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Salt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SelfIntroduction")
