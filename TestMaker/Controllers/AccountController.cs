@@ -35,6 +35,11 @@ namespace TestMaker.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == loginUser.LoginId);
+                if(userInfo == null)
+                {
+                    ModelState.AddModelError("LoginId", "The Login id is unregistered");
+                    return View(loginUser);
+                }
                 var saltBytes = Password.ChangeFromBase64(userInfo.Salt);
                 var inputHashBytes = Password.CreatePBKDF2Hash(loginUser.Password, saltBytes, Password.hashSize, Password.iteration);
                 var inputHashText = Password.ChangeToBase64(inputHashBytes);
@@ -55,6 +60,7 @@ namespace TestMaker.Controllers
                 }
                 else
                 {
+                    ModelState.AddModelError("Password", "The Password is incorrect.");
                     return View(loginUser);
                 }
             }
