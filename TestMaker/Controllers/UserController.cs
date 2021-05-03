@@ -62,7 +62,7 @@ namespace TestMaker.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password")] User user)
+        public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] User user)
         {
             if(_context.Users.Where(o => o.LoginId == user.LoginId).Any())
             {
@@ -101,7 +101,7 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,Password,Salt,UserName,SelfIntroduction,Icon")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,Password,ConfirmPassword,Salt,UserName,SelfIntroduction,Icon")] User user)
         {
             if (id != user.UserId)
             {
@@ -184,16 +184,20 @@ namespace TestMaker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword([Bind("UserId,LoginId,UserName,Password,SelfIntroduction,Icon")] User user)
+        public async Task<IActionResult> ChangePassword([Bind("UserId,LoginId,UserName,Password,ConfirmPassword,SelfIntroduction,Icon")] User user)
         {
-            var saltBytes = Password.CreateSalt(Password.saltSize);
-            var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
-            user.Salt = Password.ChangeToBase64(saltBytes);
-            user.Password = Password.ChangeToBase64(hashBytes);
+            if (ModelState.IsValid)
+            {
+                var saltBytes = Password.CreateSalt(Password.saltSize);
+                var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+                user.Salt = Password.ChangeToBase64(saltBytes);
+                user.Password = Password.ChangeToBase64(hashBytes);
 
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-            return View("Details",user);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return View("Details", user);
+            }
+            return View(user);
         }
 
         private bool UserExists(int id)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using TestMaker.Validations;
@@ -18,6 +19,11 @@ namespace TestMaker.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Password and Confirmation Password must match.")]
+        [NotMapped]
+        public string ConfirmPassword { get; set; }
         public string Salt { get; set; }
         [Display(Name = "Self introduction")]
         public string SelfIntroduction { get; set; }
