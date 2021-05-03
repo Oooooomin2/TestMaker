@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,20 +7,16 @@ using TestMaker.Validations;
 
 namespace TestMaker.Models
 {
-    public class User
+    public class NewUserRegist
     {
-        public int UserId { get; set; }
         [Required]
         [EmailAddress]
+        [LoginIdUnique]
         public string LoginId { get; set; }
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string Salt { get; set; }
-        [Display(Name = "Self introduction")]
-        public string SelfIntroduction { get; set; }
-        public byte[] Icon { get; set; }
-        public ICollection<Test> Tests { get; set; }
     }
 }

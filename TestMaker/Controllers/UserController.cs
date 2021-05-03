@@ -82,14 +82,13 @@ namespace TestMaker.Controllers
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var user = await _context.Users.FindAsync(id);
+            var user = _context.Users.Find(id);
             if (user == null)
             {
                 return NotFound();
@@ -102,44 +101,51 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,UserName,Password,SelfIntroduction,Icon")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,Password,Salt,UserName,SelfIntroduction,Icon")] User user)
         {
             if (id != user.UserId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var files = Request.Form.Files;
+            if (files.Any())
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await Request.Form.Files.FirstOrDefault().CopyToAsync(memoryStream);
+                using var memoryStream = new MemoryStream();
+                await files.FirstOrDefault().CopyToAsync(memoryStream);
 
-                    user.Icon = memoryStream.ToArray();
-                }
-                try
-                {
-                    var saltBytes = Password.CreateSalt(Password.saltSize);
-                    var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
-                    user.Salt = Password.ChangeToBase64(saltBytes);
-                    user.Password = Password.ChangeToBase64(hashBytes);
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                user.Icon = memoryStream.ToArray();
             }
-            return View(user);
+
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                if (User.FindFirst(ClaimTypes.Name).Value != user.UserName)
+                {
+                    Claim[] claims = {
+                        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                        new Claim(ClaimTypes.Name, user.UserName),
+                    };
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity));
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(user.UserId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Users/Delete/5
@@ -169,6 +175,25 @@ namespace TestMaker.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ChangePassword(int id)
+        {
+            var userEntity = await _context.Users.FindAsync(id);
+            return View(userEntity);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([Bind("UserId,LoginId,UserName,Password,SelfIntroduction,Icon")] User user)
+        {
+            var saltBytes = Password.CreateSalt(Password.saltSize);
+            var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
+            user.Salt = Password.ChangeToBase64(saltBytes);
+            user.Password = Password.ChangeToBase64(hashBytes);
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            return View("Details",user);
         }
 
         private bool UserExists(int id)
