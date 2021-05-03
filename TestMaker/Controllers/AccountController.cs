@@ -30,7 +30,7 @@ namespace TestMaker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("LoginId,Password")] Login loginUser, string returnUrl = null)
+        public async Task<IActionResult> Login([Bind("LoginId,Password")] User loginUser, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {

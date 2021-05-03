@@ -38,7 +38,11 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="index" asp-controller="Test" asp-route-id="@Model.UserId">Show questions this user created</a> |
-    <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a>
+<div class="d-flex">
+    <a asp-action="index" asp-controller="Test" asp-route-id="@Model.UserId">Show questions this user created</a>
+    @if(Model.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+    {
+        <div>&nbsp;|&nbsp;</div>
+        <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a>
+    }
 </div>

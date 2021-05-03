@@ -13,7 +13,6 @@ namespace TestMaker.Models
         public int UserId { get; set; }
         [Required]
         [EmailAddress]
-        [LoginIdUnique]
         public string LoginId { get; set; }
         public string UserName { get; set; }
         [Required]
