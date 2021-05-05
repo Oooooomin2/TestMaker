@@ -8,7 +8,7 @@
 
 <div>
     <div class="row">
-        <h4 class="col-2">Test</h4>
+        <h4 class="col-1">Test</h4>
         @if (ViewData["Score"] != null) 
         { 
             <input id="Score" type="hidden" value="Result" />
@@ -47,25 +47,26 @@
         {
             <input type="hidden" asp-for="Tests.Questions[q].QuestionId" />
             <div class="container">
-                <div class="mb-5">
+                <div class="mt-4">
                     @Html.DisplayFor(model => model.Tests.Questions[q].QuestionText)
                 </div>
-                <div class="mb-5">
+                <div class="mb-2">
                     @if (Model.Choices
-                         .Where(o => o.QuestionId == Model.Tests.Questions[q].QuestionId)
-                         .Count(o => o.IsAnswer) > 1)
+                        .Where(o => o.QuestionId == Model.Tests.Questions[q].QuestionId)
+                        .Count(o => o.IsAnswer) > 1)
                     {
+                        <div>
                         @for (var i = 0; i < 4; i++)
                         {
-                            <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
-                            <div>
-                                @Html.CheckBoxFor(
-                                    model => model.Tests.Questions[q].Choices[i].IsUsersAnswerCheck,
-                                    new { @class = "ml-2" }
-                                )
-                                @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
-                            </div>
+                                <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
+                                <div>
+                                    @Html.CheckBoxFor(
+                                        model => model.Tests.Questions[q].Choices[i].IsUsersAnswerCheck
+                                    )
+                                    @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
+                                </div>
                         }
+                        </div>
                     }
                     else
                     {
@@ -86,15 +87,16 @@
                 <div class="text-danger">@ViewData[Model.Tests.Questions[q].QuestionId.ToString()]</div>
             }
         }
-        <input type="submit" value="Score the test" class="btn btn-primary" />
-    }
-    @if(ViewData["CorrectCount"] != null)
-    {
-        <div class="text-danger">@ViewData["CorrectCount"] / @Model.Tests.Number Correct!!</div>
+        <div class="row mt-2">
+            <input type="submit" value="Score the test" class="btn btn-primary col-2" />
+            @if (ViewData["CorrectCount"] != null)
+            {
+                <div class="align-items-center d-flex col-2 text-danger">@ViewData["CorrectCount"] / @Model.Tests.Number Correct!!</div>
+            }
+        </div>
     }
 </div>
 <div>
-    |
     <a asp-action="Index">Back to List</a>
 </div>
 
