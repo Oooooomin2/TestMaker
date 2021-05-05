@@ -9,6 +9,10 @@
 <div>
     <div class="row">
         <h4 class="col-2">Test</h4>
+        @if (ViewData["Score"] != null) 
+        { 
+            <input id="Score" type="hidden" value="Result" />
+        }
         @if (Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
         {
             <div class="col-1">
@@ -28,42 +32,78 @@
                     new { @class = "btn btn-danger" })
             </div>
         }
-        <div class="col-4">Created time: @(Model.Tests.CreatedTime)</div>
-        </div>
-        <hr />
-        @foreach (var q in Model.Questions)
+    </div>
+    <hr />
+    @using (Html.BeginForm(
+       "Score",
+       "Test",
+       new { id = Model.Tests.TestId },
+       FormMethod.Post))
+    {
+        <input type="hidden" asp-for="Tests.UserId" />
+        <input type="hidden" asp-for="Tests.TestId" />
+        <input type="hidden" asp-for="Tests.Number" />
+        @for (var q = 0; q < Model.Tests.Number; q++)
         {
+            <input type="hidden" asp-for="Tests.Questions[q].QuestionId" />
             <div class="container">
                 <div class="mb-5">
-                    @Html.DisplayFor(model => q.QuestionText)
+                    @Html.DisplayFor(model => model.Tests.Questions[q].QuestionText)
                 </div>
                 <div class="mb-5">
                     @if (Model.Choices
-                        .Where(o => o.QuestionId == q.QuestionId)
-                        .Count(o => o.IsAnswer) > 1)
+                         .Where(o => o.QuestionId == Model.Tests.Questions[q].QuestionId)
+                         .Count(o => o.IsAnswer) > 1)
                     {
-                        @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
+                        @for (var i = 0; i < 4; i++)
                         {
+                            <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
                             <div>
-                                <input type="checkbox" name="choice_@(q.QuestionId)" />
-                                @Html.DisplayFor(model => c.ChoiceText)
+                                @Html.CheckBoxFor(
+                                    model => model.Tests.Questions[q].Choices[i].IsUsersAnswerCheck,
+                                    new { @class = "ml-2" }
+                                )
+                                @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
                             </div>
                         }
                     }
                     else
                     {
-                        @foreach (var c in Model.Choices.Where(o => o.QuestionId == q.QuestionId))
-                        {
-                            <div>
-                                <input type="radio" name="choice_@(q.QuestionId)" />
-                                @Html.DisplayFor(model => c.ChoiceText)
-                            </div>
-                        }
+                        <div class="data-single">
+                            @for (var i = 0; i < 4; i++)
+                            {
+                                <div>
+                                    <input type="radio" asp-for="Tests.Questions[q].Choices[0].IsUsersAnswerRadio" value="@Model.Tests.Questions[q].Choices[i].ChoiceId" />
+                                    @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
             </div>
+            @if(ViewData[Model.Tests.Questions[q].QuestionId.ToString()] != null)
+            {
+                <div class="text-danger">@ViewData[Model.Tests.Questions[q].QuestionId.ToString()]</div>
+            }
         }
-    </div>
-<div>|
+        <input type="submit" value="Score the test" class="btn btn-primary" />
+    }
+    @if(ViewData["CorrectCount"] != null)
+    {
+        <div class="text-danger">@ViewData["CorrectCount"] / @Model.Tests.Number Correct!!</div>
+    }
+</div>
+<div>
+    |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section scripts{ 
+    <script>
+        if ($('#Score').length == 0) {
+            $('.data-single > div > input').map((_, v) => {
+                v.checked = false;
+            });
+        }
+    </script>
+}

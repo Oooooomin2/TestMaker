@@ -197,6 +197,74 @@ namespace TestMaker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Score(int id, [Bind("Tests")]TestViewModel testViewModel)
+        {
+            var questions = _context.Questions.Where(o => o.TestId == id);
+            foreach (var question in questions)
+            {
+                question.Choices = _context.Choices.Where(o => o.QuestionId == question.QuestionId).ToList();
+            }
+            var correctCount = 0;
+            foreach (var t in testViewModel.Tests.Questions)
+            {
+                var q = questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
+                if (t.Choices.Count > 1)
+                {
+                    var answers = q.Choices.Where(o => o.IsAnswer).ToList();
+                    var answersCollection = new List<int>();
+                    foreach (var answer in answers)
+                    {
+                        answersCollection.Add(answer.ChoiceId);
+                    }
+                    var usersAnswers = t.Choices.Where(o => o.IsUsersAnswerCheck).ToList();
+                    var usersAnswersCollection = new List<int>();
+                    foreach (var usersAnswer in usersAnswers)
+                    {
+                        usersAnswersCollection.Add(usersAnswer.ChoiceId);
+                    }
+                    if (answersCollection.SequenceEqual(usersAnswersCollection))
+                    {
+                        ViewData[t.QuestionId.ToString()] = "Correct!!";
+                        correctCount++;
+                    }
+                    else
+                    {
+                        ViewData[t.QuestionId.ToString()] = "Incorrect!!";
+                    }
+                }
+                else
+                {
+                    var answer = q.Choices
+                        .Where(o => o.QuestionId == t.QuestionId)
+                        .SingleOrDefault(o => o.IsAnswer).ChoiceId;
+                    var usersAnswer = t.Choices.FirstOrDefault().IsUsersAnswerRadio;
+                    if (answer == usersAnswer)
+                    {
+                        ViewData[t.QuestionId.ToString()] = "Correct!!";
+                        correctCount++;
+                    }
+                    else
+                    {
+                        ViewData[t.QuestionId.ToString()] = "Incorrect!!";
+                    }
+                }
+            }
+            var test = new TestViewModel
+            {
+                Tests = _context.Tests
+                    .FirstOrDefault(m => m.TestId == id),
+                Questions = _context.Questions
+                    .Where(m => m.TestId == id).ToList(),
+                Choices = _context.Choices
+                    .Where(m => m.Question.TestId == id).ToList()
+            };
+            ViewData["Score"] = "Score";
+            ViewData["CorrectCount"] = correctCount;
+            return View("Details", test);
+        }
+
         private bool TestExists(int id)
         {
             return _context.Tests.Any(e => e.TestId == id);
