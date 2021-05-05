@@ -63,7 +63,6 @@ body {
   height:calc(100vh - 40px);
 }
 .footer {
-  position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
