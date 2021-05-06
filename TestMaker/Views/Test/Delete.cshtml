@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Delete";
+    ViewData["Action"] = "Delete";
+    ViewData["Controller"] = "Test";
 }
 
 <h1>Delete</h1>
@@ -22,6 +24,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="TestId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-id="@Model.UserId">Back to List</a>
     </form>
 </div>

@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit";
+    ViewData["Action"] = "Edit";
+    ViewData["Controller"] = "Test";
 }
 
 <h1>Edit</h1>
@@ -54,6 +56,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-id="@Model.Tests.UserId">Back to List</a>
 </div>
 
