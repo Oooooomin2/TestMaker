@@ -25,11 +25,11 @@
                     }
                     @if (userInfo.Icon == null)
                     {
-                        <img src="~/Images/profile_icon_not_set.png" width="120" height="120" />
+                        <img class="w-100" src="~/Images/profile_icon_not_set.png" />
                     }
                     else
                     {
-                        <img src="data:image/png;base64,@(System.Convert.ToBase64String(userInfo.Icon))" width="120" height="120" style="border-radius:50%"/>
+                        <img class="w-100" src="data:image/png;base64,@(System.Convert.ToBase64String(userInfo.Icon))" style="border-radius:50%"/>
                     }
                     <div class="mt-3">@userInfo.UserName</div>
                     <div class="mt-3">@userInfo.SelfIntroduction</div>
@@ -98,7 +98,7 @@
                                             @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().UpdatedTime)
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Users.FirstOrDefault().UserName)
+                                            @Html.DisplayName("Creator")
                                         </th>
                                         <th></th>
                                     </tr>

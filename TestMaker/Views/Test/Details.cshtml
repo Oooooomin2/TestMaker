@@ -4,18 +4,17 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Tests.Title</h1>
 
 <div>
     <div class="row">
-        <h4 class="col-1">Test</h4>
         @if (ViewData["Score"] != null) 
         { 
             <input id="Score" type="hidden" value="Result" />
         }
         @if (Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
         {
-            <div class="col-1">
+            <div class="col-md-1 col-sm-2 col-2">
                 @Html.ActionLink(
                     "Edit",
                     "Edit",
@@ -23,7 +22,7 @@
                     new { id = Model.Tests.TestId },
                     new { @class = "btn btn-primary" })
             </div>
-            <div class="col-1">
+            <div class="col-md-1 col-sm-2 col-2">
                 @Html.ActionLink(
                     "Delete",
                     "Delete",
@@ -47,8 +46,8 @@
         {
             <input type="hidden" asp-for="Tests.Questions[q].QuestionId" />
             <div class="container">
-                <div class="mt-4">
-                    @Html.DisplayFor(model => model.Tests.Questions[q].QuestionText)
+                <div class="mt-4 mb-1">
+                    @(q + 1). @Html.DisplayFor(model => model.Tests.Questions[q].QuestionText)
                 </div>
                 <div class="mb-2">
                     @if (Model.Choices
@@ -87,8 +86,8 @@
                 <div class="text-danger">@ViewData[Model.Tests.Questions[q].QuestionId.ToString()]</div>
             }
         }
-        <div class="row mt-2">
-            <input type="submit" value="Score the test" class="btn btn-primary col-2" />
+        <div class="row mt-2 ml-1">
+            <input type="submit" value="Score the test" class="btn btn-primary col-4 col-md-2" />
             @if (ViewData["CorrectCount"] != null)
             {
                 <div class="align-items-center d-flex col-2 text-danger">@ViewData["CorrectCount"] / @Model.Tests.Number Correct!!</div>
