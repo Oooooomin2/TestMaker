@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    ViewData["Action"] = "Details";
+    ViewData["Controller"] = "Test";
 }
 
 <h1>@Model.Tests.Title</h1>
@@ -51,7 +53,7 @@
                 </div>
                 <div class="mb-2">
                     @if (Model.Choices
-                        .Where(o => o.QuestionId == Model.Tests.Questions[q].QuestionId)
+                        .Where(o => o.QuestionId == Model.Questions[q].QuestionId)
                         .Count(o => o.IsAnswer) > 1)
                     {
                         <div>
@@ -81,9 +83,9 @@
                     }
                 </div>
             </div>
-            @if(ViewData[Model.Tests.Questions[q].QuestionId.ToString()] != null)
+            @if(ViewData[Model.Questions[q].QuestionId.ToString()] != null)
             {
-                <div class="text-danger">@ViewData[Model.Tests.Questions[q].QuestionId.ToString()]</div>
+                <div class="text-danger">@ViewData[Model.Questions[q].QuestionId.ToString()]</div>
             }
         }
         <div class="row mt-2 ml-1">
@@ -96,7 +98,7 @@
     }
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-route-id="@Model.Tests.UserId">Back to List</a>
 </div>
 
 @section scripts{ 
