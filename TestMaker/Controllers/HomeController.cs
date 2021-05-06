@@ -32,6 +32,11 @@ namespace TestMaker.Controllers
             return View(index);
         }
 
+        public IActionResult Description()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
