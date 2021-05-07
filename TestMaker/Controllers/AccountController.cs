@@ -40,19 +40,12 @@ namespace TestMaker.Controllers
                     ModelState.AddModelError("LoginId", "The Login id is unregistered");
                     return View(loginUser);
                 }
-                var saltBytes = Password.ChangeFromBase64(userInfo.Salt);
-                var inputHashBytes = Password.CreatePBKDF2Hash(loginUser.Password, saltBytes, Password.hashSize, Password.iteration);
-                var inputHashText = Password.ChangeToBase64(inputHashBytes);
+                var inputHashText = Password.CreateHashTextBase64(userInfo.Salt, loginUser.Password);
                 if (userInfo.Password == inputHashText)
                 {
-                    Claim[] claims = {
-                        new Claim(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
-                        new Claim(ClaimTypes.Name, userInfo.UserName),
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(
-                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
+                    var claimsIdentity = new Authenticate(
+                        userId: userInfo.UserId,
+                        userName: userInfo.UserName).CreateClaimsIdentity();
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity));

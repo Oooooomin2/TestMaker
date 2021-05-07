@@ -38,7 +38,6 @@ namespace TestMaker.Controllers
             {
                 return NotFound();
             }
-
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
@@ -70,10 +69,8 @@ namespace TestMaker.Controllers
             }
             if (ModelState.IsValid)
             {
-                var saltBytes = Password.CreateSalt(Password.saltSize);
-                var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
-                user.Salt = Password.ChangeToBase64(saltBytes);
-                user.Password = Password.ChangeToBase64(hashBytes);
+                user.Salt = Password.CreateSaltBase64();
+                user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Login", "Account");
@@ -113,7 +110,6 @@ namespace TestMaker.Controllers
             {
                 using var memoryStream = new MemoryStream();
                 await files.FirstOrDefault().CopyToAsync(memoryStream);
-
                 user.Icon = memoryStream.ToArray();
             }
 
@@ -123,12 +119,9 @@ namespace TestMaker.Controllers
                 await _context.SaveChangesAsync();
                 if (User.FindFirst(ClaimTypes.Name).Value != user.UserName)
                 {
-                    Claim[] claims = {
-                        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                        new Claim(ClaimTypes.Name, user.UserName),
-                    };
-                    var claimsIdentity = new ClaimsIdentity(
-                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new Authenticate(
+                        userId: user.UserId,
+                        userName: user.UserName).CreateClaimsIdentity();
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity));
@@ -188,11 +181,8 @@ namespace TestMaker.Controllers
         {
             if (ModelState.IsValid)
             {
-                var saltBytes = Password.CreateSalt(Password.saltSize);
-                var hashBytes = Password.CreatePBKDF2Hash(user.Password, saltBytes, Password.hashSize, Password.iteration);
-                user.Salt = Password.ChangeToBase64(saltBytes);
-                user.Password = Password.ChangeToBase64(hashBytes);
-
+                user.Salt = Password.CreateSaltBase64();
+                user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
                 _context.Update(user);
                 await _context.SaveChangesAsync();
                 return View("Details", user);

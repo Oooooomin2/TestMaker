@@ -28,7 +28,9 @@ namespace TestMaker.Controllers
         {
             var index = new UserTestViewModel
             {
-                Tests = _context.Tests.Where(m => m.UserId == id).ToList(),
+                Tests = _context.Tests
+                    .Where(m => m.UserId == id)
+                    .ToList(),
                 User = _context.Users
                     .FirstOrDefault(m => m.UserId == id)
             };
@@ -47,9 +49,11 @@ namespace TestMaker.Controllers
                 Tests = _context.Tests
                     .FirstOrDefault(m => m.TestId == id),
                 Questions = _context.Questions
-                    .Where(m => m.TestId == id).ToList(),
+                    .Where(m => m.TestId == id)
+                    .ToList(),
                 Choices = _context.Choices
-                    .Where(m => m.Question.TestId == id).ToList()
+                    .Where(m => m.Question.TestId == id)
+                    .ToList()
             };
             if (test == null)
             {
@@ -86,14 +90,6 @@ namespace TestMaker.Controllers
                 testViewModel.Tests.CreatedTime = DateTime.Now;
                 testViewModel.Tests.UpdatedTime = DateTime.Now;
                 _context.Tests.Add(testViewModel.Tests);
-                foreach(var q in testViewModel.Tests.Questions)
-                {
-                    _context.Questions.Add(q);
-                    foreach(var c in q.Choices)
-                    {
-                        _context.Choices.Add(c);
-                    }
-                }
                 _context.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
@@ -142,14 +138,6 @@ namespace TestMaker.Controllers
                 {
                     testViewModel.Tests.UpdatedTime = DateTime.Now;
                     _context.Tests.Update(testViewModel.Tests);
-                    foreach (var q in testViewModel.Tests.Questions)
-                    {
-                        _context.Questions.Update(q);
-                        foreach (var c in q.Choices)
-                        {
-                            _context.Choices.Update(c);
-                        }
-                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -163,7 +151,7 @@ namespace TestMaker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             return View(testViewModel);
         }
