@@ -13,23 +13,16 @@ namespace TestMaker.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly TestMakerContext _context;
 
-        public HomeController(ILogger<HomeController> logger, TestMakerContext context)
+        public HomeController(TestMakerContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var index = new HomeIndexViewModel
-            {
-                Tests = _context.Tests.ToList(),
-                Users = _context.Users.ToList()
-            };
-            return View(index);
+            return View(new HomeIndexViewModel().ShowHomeInfo(_context));
         }
 
         public IActionResult Description()

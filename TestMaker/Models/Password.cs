@@ -11,7 +11,7 @@ namespace TestMaker.Models
         public static readonly int saltSize = 32;
         public static readonly int hashSize = 32;
         public static readonly int iteration = 10000;
-        public static byte[] CreateSalt(int size)
+        private static byte[] CreateSalt(int size)
         {
             var bytes = new byte[size];
             using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
@@ -21,22 +21,26 @@ namespace TestMaker.Models
             return bytes;
         }
 
-        public static byte[] CreatePBKDF2Hash(string password, byte[] salt, int size, int iteration)
+        private static byte[] CreatePBKDF2Hash(string password, byte[] salt, int size, int iteration)
         {
-            using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, salt, iteration))
-            {
-                return rfc2898DeriveBytes.GetBytes(size);
-            }
+            using var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, salt, iteration);
+            return rfc2898DeriveBytes.GetBytes(size);
         }
 
-        public static string ChangeToBase64(byte[] b)
+        public static string CreateHashTextBase64(string salt, string password)
         {
-            return Convert.ToBase64String(b);
+            var saltBytes = Convert.FromBase64String(salt);
+            var inputHashBytes = CreatePBKDF2Hash(password, saltBytes, hashSize, iteration);
+            return Convert.ToBase64String(inputHashBytes);
+        }
+        public static string CreateSaltBase64()
+        {
+            return Convert.ToBase64String(CreateSalt(saltSize));
         }
 
-        public static byte[] ChangeFromBase64(string s)
+        public static string CreatePasswordHashBase64(byte[] saltBytes, string password)
         {
-            return Convert.FromBase64String(s);
+            return Convert.ToBase64String(CreatePBKDF2Hash(password, saltBytes, hashSize, iteration));
         }
     }
 }
