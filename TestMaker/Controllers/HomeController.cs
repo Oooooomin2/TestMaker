@@ -22,6 +22,9 @@ namespace TestMaker.Controllers
 
         public IActionResult Index()
         {
+            ViewData["Title"] = "Home Page";
+            ViewData["Action"] = "Index";
+            ViewData["Controller"] = "Home";
             return View(new HomeIndexViewModel().ShowHomeInfo(_context));
         }
 
