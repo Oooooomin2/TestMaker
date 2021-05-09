@@ -35,19 +35,19 @@ namespace TestMaker.Controllers
         // GET: Test/Details/5
         public IActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             ViewData["Title"] = "Details";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsInfo(id, _context));
+            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context));
         }
 
         public IActionResult SetSettings()
         {
+            ViewData["Title"] = "Settings";
+            ViewData["Action"] = "Settings";
+            ViewData["Controller"] = "Test";
             return View();
         }
 
@@ -56,6 +56,8 @@ namespace TestMaker.Controllers
         {
             ViewData["Title"] = title;
             ViewData["Number"] = number;
+            ViewData["Action"] = "Create";
+            ViewData["Controller"] = "Test";
             return View();
         }
 
@@ -66,8 +68,6 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Tests")]TestViewModel testViewModel)
         {
-            ViewData["Title"] = testViewModel.Tests.Title;
-            ViewData["Number"] = testViewModel.Tests.Number;
             if (ModelState.IsValid)
             {
                 testViewModel.Tests.CreatedTime = DateTime.Now;
@@ -76,31 +76,20 @@ namespace TestMaker.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
+            ViewData["Title"] = testViewModel.Tests.Title;
+            ViewData["Number"] = testViewModel.Tests.Number;
             return View(testViewModel);
         }
 
         // GET: Test/Edit/5
         public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var test = new TestViewModel
-            {
-                Tests = _context.Tests
-                    .FirstOrDefault(m => m.TestId == id),
-                Questions = _context.Questions
-                    .Where(m => m.TestId == id).ToList(),
-                Choices = _context.Choices
-                    .Where(m => m.Question.TestId == id).ToList()
-            };
-            if (test == null)
-            {
-                return NotFound();
-            }
-            return View(test);
+            ViewData["Title"] = "Edit";
+            ViewData["Action"] = "Edit";
+            ViewData["Controller"] = "Test";
+            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context));
         }
 
         // POST: Test/Edit/5
@@ -110,10 +99,7 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Tests")]TestViewModel testViewModel)
         {
-            if (id != testViewModel.Tests.TestId)
-            {
-                return NotFound();
-            }
+            if (id != testViewModel.Tests.TestId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -126,9 +112,7 @@ namespace TestMaker.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TestExists(testViewModel.Tests.TestId))
-                    {
-                        return NotFound();
-                    }
+                    return NotFound();
                     else
                     {
                         throw;
@@ -142,17 +126,10 @@ namespace TestMaker.Controllers
         // GET: Test/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var test = await _context.Tests
                 .FirstOrDefaultAsync(m => m.TestId == id);
-            if (test == null)
-            {
-                return NotFound();
-            }
 
             return View(test);
         }
