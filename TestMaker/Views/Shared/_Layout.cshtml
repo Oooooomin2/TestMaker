@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body style=@(User.Identity.IsAuthenticated || ViewData["Action"].ToString() == "Login" ? null : "background-image:url(/Images/Home.jpg); background-size: cover;")>
+    <input id="Action" type="hidden" value="@ViewData["Action"]" />
+    <input id="Controller" type="hidden" value="@ViewData["Controller"]" />
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">

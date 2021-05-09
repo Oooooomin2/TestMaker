@@ -79,5 +79,15 @@ namespace DDDTest.Tests
             Assert.Equal("Index", view.ViewData["Action"]);
             Assert.Equal("Home", view.ViewData["Controller"]);
         }
+
+        [Fact]
+        public void Access_descriptionIndex_check_viewData()
+        {
+            var controller = new HomeController(null);
+            var view = controller.Description() as ViewResult;
+            Assert.Equal("What's the Test Maker?", view.ViewData["Title"]);
+            Assert.Equal("Description", view.ViewData["Action"]);
+            Assert.Equal("Home", view.ViewData["Controller"]);
+        }
     }
 }

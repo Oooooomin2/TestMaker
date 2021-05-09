@@ -26,15 +26,10 @@ namespace TestMaker.Controllers
         // GET: Test/Index/5
         public IActionResult Index(int? id)
         {
-            var index = new UserTestViewModel
-            {
-                Tests = _context.Tests
-                    .Where(m => m.UserId == id)
-                    .ToList(),
-                User = _context.Users
-                    .FirstOrDefault(m => m.UserId == id)
-            };
-            return View(index);
+            ViewData["Title"] = "Index";
+            ViewData["Action"] = "Index";
+            ViewData["Controller"] = "Test";
+            return View(new UserTestViewModel().ShowTestIndexInfo(id, _context));
         }
 
         // GET: Test/Details/5
@@ -44,23 +39,11 @@ namespace TestMaker.Controllers
             {
                 return NotFound();
             }
-            var test = new TestViewModel
-            {
-                Tests = _context.Tests
-                    .FirstOrDefault(m => m.TestId == id),
-                Questions = _context.Questions
-                    .Where(m => m.TestId == id)
-                    .ToList(),
-                Choices = _context.Choices
-                    .Where(m => m.Question.TestId == id)
-                    .ToList()
-            };
-            if (test == null)
-            {
-                return NotFound();
-            }
 
-            return View(test);
+            ViewData["Title"] = "Details";
+            ViewData["Action"] = "Details";
+            ViewData["Controller"] = "Test";
+            return View(new TestViewModel().ShowTestDetailsInfo(id, _context));
         }
 
         public IActionResult SetSettings()

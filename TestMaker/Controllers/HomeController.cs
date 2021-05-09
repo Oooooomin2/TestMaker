@@ -30,6 +30,9 @@ namespace TestMaker.Controllers
 
         public IActionResult Description()
         {
+            ViewData["Title"] = "What's the Test Maker?";
+            ViewData["Action"] = "Description";
+            ViewData["Controller"] = "Home";
             return View();
         }
 
