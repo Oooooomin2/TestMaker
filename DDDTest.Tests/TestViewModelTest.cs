@@ -111,7 +111,7 @@ namespace DDDTest.Tests
                 _context.Choices.Add(c);
             }
             _context.SaveChanges();
-            var testInfoTest = new TestViewModel().ShowTestDetailsInfo(1, _context);
+            var testInfoTest = new TestViewModel().ShowTestDetailsEditInfo(1, _context);
             Assert.Equal(viewModel.Tests.TestId, testInfoTest.Tests.TestId);
             Assert.Equal(viewModel.Tests.Title, testInfoTest.Tests.Title);
             Assert.Equal(viewModel.Tests.CreatedTime, testInfoTest.Tests.CreatedTime);
@@ -153,6 +153,132 @@ namespace DDDTest.Tests
             Assert.Equal("Details", view.ViewData["Title"]);
             Assert.Equal("Details", view.ViewData["Action"]);
             Assert.Equal("Test", view.ViewData["Controller"]);
+        }
+
+        [Fact]
+        public void Access_TestSettings_check_viewData()
+        {
+            var controller = new TestController(null);
+            var view = controller.SetSettings() as ViewResult;
+            Assert.Equal("Settings", view.ViewData["Title"]);
+            Assert.Equal("Settings", view.ViewData["Action"]);
+            Assert.Equal("Test", view.ViewData["Controller"]);
+        }
+
+        [Fact]
+        public void Access_TestCreate_check_viewData()
+        {
+            var controller = new TestController(null);
+            var view = controller.Create("CreateMethodTest", "1") as ViewResult;
+            Assert.Equal("CreateMethodTest", view.ViewData["Title"]);
+            Assert.Equal("1", view.ViewData["Number"]);
+            Assert.Equal("Create", view.ViewData["Action"]);
+            Assert.Equal("Test", view.ViewData["Controller"]);
+        }
+
+        [Fact]
+        public void Access_TestCreated_check_RedirectToActionResult()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestCreated_check_viewData")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            var controller = new TestController(_context);
+            var actionResult = controller.Create(viewModel) as RedirectToActionResult;
+            Assert.Equal("Index", actionResult.ActionName);
+            Assert.Equal("Home", actionResult.ControllerName);
+        }
+
+        [Fact]
+        public void Access_TestCreated_Check_db()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestCreated_Check_db")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            var controller = new TestController(_context);
+            var actionResult = controller.Create(viewModel);
+            Assert.Equal(viewModel.Tests.TestId, _context.Tests.FirstOrDefault().TestId);
+            Assert.Equal(viewModel.Tests.Title, _context.Tests.FirstOrDefault().Title);
+            Assert.Equal(viewModel.Tests.CreatedTime, _context.Tests.FirstOrDefault().CreatedTime);
+            Assert.Equal(viewModel.Tests.UpdatedTime, _context.Tests.FirstOrDefault().UpdatedTime);
+            Assert.Equal(viewModel.Tests.UserId, _context.Tests.FirstOrDefault().UserId);
+            Assert.Equal(viewModel.Tests.Questions[0].QuestionText, _context.Tests.FirstOrDefault().Questions[0].QuestionText);
+            Assert.Equal(viewModel.Tests.Questions[0].TestId, _context.Tests.FirstOrDefault().Questions[0].TestId);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].ChoiceId, _context.Tests.FirstOrDefault().Questions[0].Choices[0].ChoiceId);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].ChoiceText, _context.Tests.FirstOrDefault().Questions[0].Choices[0].ChoiceText);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].IsAnswer, _context.Tests.FirstOrDefault().Questions[0].Choices[0].IsAnswer);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].IsUsersAnswerCheck, _context.Tests.FirstOrDefault().Questions[0].Choices[0].IsUsersAnswerCheck);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].IsUsersAnswerRadio, _context.Tests.FirstOrDefault().Questions[0].Choices[0].IsUsersAnswerRadio);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].QuestionId, _context.Tests.FirstOrDefault().Questions[0].Choices[0].QuestionId);
+            Assert.Equal(viewModel.Tests.Questions[0].Choices[0].ChoiceText, _context.Tests.FirstOrDefault().Questions[0].Choices[0].ChoiceText);
+            Assert.Equal(viewModel.Choices[0].QuestionId, _context.Choices.FirstOrDefault().QuestionId);
+            Assert.Equal(viewModel.Choices[0].IsAnswer, _context.Choices.FirstOrDefault().IsAnswer);
+        }
+
+        [Fact]
+        public void Access_TestCreated_Check_GivenInvalidModel()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestCreated_Check_GivenInvalidModel")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            var controller = new TestController(_context);
+            controller.ModelState.AddModelError("error", "some error");
+            var view = controller.Create(viewModel) as ViewResult;
+            Assert.Equal(viewModel.Tests.Title, view.ViewData["Title"]);
+            Assert.Equal(viewModel.Tests.Number, view.ViewData["Number"]);
+        }
+
+        [Fact]
+        public void Access_TestEdit_Check_viewData()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestEdit_Check_viewData")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            foreach (var q in viewModel.Questions)
+            {
+                _context.Questions.Add(q);
+            }
+            foreach (var c in viewModel.Choices)
+            {
+                _context.Choices.Add(c);
+            }
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Edit(1) as ViewResult;
+            Assert.Equal("Edit", view.ViewData["Title"]);
+            Assert.Equal("Edit", view.ViewData["Action"]);
+            Assert.Equal("Test", view.ViewData["Controller"]);
+        }
+
+        [Fact]
+        public async Task Access_TestEdited_Check_WhenIdDifferentPostedData_BeNotFound()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestEdited_Check_WhenIdDifferentPostedData_BeNotFound")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            foreach (var q in viewModel.Questions)
+            {
+                _context.Questions.Add(q);
+            }
+            foreach (var c in viewModel.Choices)
+            {
+                _context.Choices.Add(c);
+            }
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var actionResult = await controller.Edit(999999, viewModel);
+            Assert.IsType<NotFoundResult>(actionResult);
         }
     }
 }
