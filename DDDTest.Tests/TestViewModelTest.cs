@@ -259,7 +259,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_TestEdited_Check_WhenIdDifferentPostedData_BeNotFound()
+        public void Access_TestEdited_Check_WhenIdDifferentPostedData_BeNotFound()
         {
             var viewModel = TestViewModelTestData.TestViewModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -277,8 +277,77 @@ namespace DDDTest.Tests
             }
             _context.SaveChanges();
             var controller = new TestController(_context);
-            var actionResult = await controller.Edit(999999, viewModel);
+            var actionResult = controller.Edit(999999, viewModel);
             Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        [Fact]
+        public void Access_TestEdited_Check_GivenInvalidModel()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestEdited_Check_GivenInvalidModel")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            foreach (var q in viewModel.Questions)
+            {
+                _context.Questions.Add(q);
+            }
+            foreach (var c in viewModel.Choices)
+            {
+                _context.Choices.Add(c);
+            }
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            controller.ModelState.AddModelError("error", "some error");
+            var view = controller.Edit(1, viewModel) as ViewResult;
+            Assert.Null(view.ViewName);
+        }
+
+        [Fact]
+        public void Access_TestDelete_check_whenIdNull_BeNotFound()
+        {
+            var viewModel = UserTestViewModelTestData.UserTestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestDelete_check_whenIdNull_BeNotFound")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            foreach (var t in viewModel.Tests)
+            {
+                _context.Tests.Add(t);
+            }
+            _context.Users.Add(viewModel.User);
+            _context.SaveChanges();
+
+            var controller = new TestController(_context);
+            var actionResult = controller.Details(null);
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        [Fact]
+        public void Access_TestDelete_Check_viewData()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestDelete_Check_viewData")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            foreach (var q in viewModel.Questions)
+            {
+                _context.Questions.Add(q);
+            }
+            foreach (var c in viewModel.Choices)
+            {
+                _context.Choices.Add(c);
+            }
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Delete(1) as ViewResult;
+            Assert.Equal("Delete", view.ViewData["Title"]);
+            Assert.Equal("Delete", view.ViewData["Action"]);
+            Assert.Equal("Test", view.ViewData["Controller"]);
         }
     }
 }
