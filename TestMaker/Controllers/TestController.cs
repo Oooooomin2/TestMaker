@@ -97,7 +97,7 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Tests")]TestViewModel testViewModel)
+        public IActionResult Edit(int id, [Bind("Tests")]TestViewModel testViewModel)
         {
             if (id != testViewModel.Tests.TestId) return NotFound();
 
@@ -107,12 +107,14 @@ namespace TestMaker.Controllers
                 {
                     testViewModel.Tests.UpdatedTime = DateTime.Now;
                     _context.Tests.Update(testViewModel.Tests);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TestExists(testViewModel.Tests.TestId))
-                    return NotFound();
+                    {
+                        return NotFound();
+                    }
                     else
                     {
                         throw;
@@ -124,14 +126,14 @@ namespace TestMaker.Controllers
         }
 
         // GET: Test/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var test = await _context.Tests
-                .FirstOrDefaultAsync(m => m.TestId == id);
-
-            return View(test);
+            ViewData["Title"] = "Delete";
+            ViewData["Action"] = "Delete";
+            ViewData["Controller"] = "Test";
+            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context).Tests);
         }
 
         // POST: Test/Delete/5
