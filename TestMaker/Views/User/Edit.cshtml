@@ -16,6 +16,7 @@
             <input type="hidden" asp-for="UserId" />
             <input type="hidden" asp-for="Password" />
             <input type="hidden" asp-for="Salt" />
+            <input type="hidden" asp-for="Icon" />
             <div class="form-group">
                 <label asp-for="LoginId" class="control-label"></label>
                 <input asp-for="LoginId" class="form-control" readonly />
@@ -32,7 +33,7 @@
                     model => model.SelfIntroduction,
                     5,
                     80,
-                    new { @class= "form-control" }
+                    new { @class = "form-control" }
                 )
             </div>
             <div class="form-group">

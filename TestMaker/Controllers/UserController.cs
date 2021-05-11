@@ -109,7 +109,7 @@ namespace TestMaker.Controllers
             if (files.Any())
             {
                 using var memoryStream = new MemoryStream();
-                await files.FirstOrDefault().CopyToAsync(memoryStream);
+                await files.SingleOrDefault().CopyToAsync(memoryStream);
                 user.Icon = memoryStream.ToArray();
             }
 
@@ -138,7 +138,7 @@ namespace TestMaker.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Users/Delete/5
@@ -167,7 +167,7 @@ namespace TestMaker.Controllers
             var user = await _context.Users.FindAsync(id);
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> ChangePassword(int id)
