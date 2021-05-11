@@ -12,7 +12,7 @@ namespace TestMaker.Models.ViewModels
         public IList<Question> Questions { get; set; }
         public IList<Choice> Choices { get; set; }
 
-        public TestViewModel ShowTestDetailsEditInfo(int? id, TestMakerContext _context)
+        public TestViewModel ShowTestDetailsEditScoreInfo(int? id, TestMakerContext _context)
         {
             return new TestViewModel
             {

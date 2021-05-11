@@ -111,7 +111,7 @@ namespace DDDTest.Tests
                 _context.Choices.Add(c);
             }
             _context.SaveChanges();
-            var testInfoTest = new TestViewModel().ShowTestDetailsEditInfo(1, _context);
+            var testInfoTest = new TestViewModel().ShowTestDetailsEditScoreInfo(1, _context);
             Assert.Equal(viewModel.Tests.TestId, testInfoTest.Tests.TestId);
             Assert.Equal(viewModel.Tests.Title, testInfoTest.Tests.Title);
             Assert.Equal(viewModel.Tests.CreatedTime, testInfoTest.Tests.CreatedTime);
@@ -348,6 +348,106 @@ namespace DDDTest.Tests
             Assert.Equal("Delete", view.ViewData["Title"]);
             Assert.Equal("Delete", view.ViewData["Action"]);
             Assert.Equal("Test", view.ViewData["Controller"]);
+        }
+
+        [Fact]
+        public async Task Access_TestDeleteConfirmed_check_RedirectToActionResult()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestDeleteConfirmed_check_RedirectToActionResult")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var actionResult = await controller.DeleteConfirmed(1) as RedirectToActionResult;
+            Assert.Equal("Index", actionResult.ActionName);
+            Assert.Equal("Home", actionResult.ControllerName);
+        }
+
+        [Fact]
+        public async Task Access_TestDeleteConfirmed_Check_db()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestDeleteConfirmed_Check_db")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            Assert.Equal(1, _context.Tests.Count());
+            var controller = new TestController(_context);
+            await controller.DeleteConfirmed(1);
+            Assert.Equal(0, _context.Tests.Count());
+        }
+
+        [Fact]
+        public void Access_TestScore_Check_MultiCorrectResult0()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestScore_Check_MultiCorrectResult0")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Score(1, viewModel) as ViewResult;
+            Assert.Equal(0, view.ViewData["CorrectCount"]);
+            Assert.Equal("Score", view.ViewData["Score"]);
+            Assert.Equal("Details", view.ViewName);
+        }
+
+        [Fact]
+        public void Access_TestScore_Check_MultiCorrectResult1()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelDataForScoreTestMultiCorrectCheck();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestScore_Check_MultiCorrectResult1")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Score(1, viewModel) as ViewResult;
+            Assert.Equal(1, view.ViewData["CorrectCount"]);
+            Assert.Equal("Score", view.ViewData["Score"]);
+            Assert.Equal("Details", view.ViewName);
+        }
+
+        [Fact]
+        public void Access_TestScore_Check_SingleCorrectResult0()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelDataForScoreTestSingleFailCheck();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestScore_Check_SingleCorrectResult0")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Score(1, viewModel) as ViewResult;
+            Assert.Equal(0, view.ViewData["CorrectCount"]);
+            Assert.Equal("Score", view.ViewData["Score"]);
+            Assert.Equal("Details", view.ViewName);
+        }
+
+        [Fact]
+        public void Access_TestScore_Check_SingleCorrectResult1()
+        {
+            var viewModel = TestViewModelTestData.TestViewModelDataForScoreTestSingleCorrectCheck();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_TestScore_Check_SingleCorrectResult1")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Tests.Add(viewModel.Tests);
+            _context.SaveChanges();
+            var controller = new TestController(_context);
+            var view = controller.Score(1, viewModel) as ViewResult;
+            Assert.Equal(1, view.ViewData["CorrectCount"]);
+            Assert.Equal("Score", view.ViewData["Score"]);
+            Assert.Equal("Details", view.ViewName);
         }
     }
 }

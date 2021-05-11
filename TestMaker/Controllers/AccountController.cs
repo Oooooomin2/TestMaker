@@ -37,7 +37,7 @@ namespace TestMaker.Controllers
                 var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == loginUser.LoginId);
                 if(userInfo == null)
                 {
-                    ModelState.AddModelError("LoginId", "The Login id is unregistered");
+                    ModelState.AddModelError("LoginId", "The LoginId is unregistered");
                     return View(loginUser);
                 }
                 var inputHashText = Password.CreateHashTextBase64(userInfo.Salt, loginUser.Password);
