@@ -150,58 +150,103 @@ namespace DDDTest.Tests.ViewModelData
             };
         }
 
-        internal static TestViewModel TestViewModelUpdateData()
+        internal static TestViewModel TestViewModelDataForScoreTestMultiCorrectCheck()
         {
             return new TestViewModel
             {
                 Tests = new Test
                 {
-                    TestId = 2,
-                    Title = "TestTitle_Update",
-                    Number = 2,
-                    CreatedTime = DateTime.Now,
-                    UpdatedTime = DateTime.Now,
+                    Number = 1,
                     UserId = 1,
                     Questions = new List<Question>()
                     {
                         new Question
                         {
-                            QuestionText = "TestQuestion1_Update",
                             TestId = 1,
                             Choices = new List<Choice>()
                             {
                                 new Choice
                                 {
-                                    ChoiceText = "testChoice1_Update",
-                                    IsAnswer = false,
-                                    IsUsersAnswerCheck = true,
-                                    IsUsersAnswerRadio = 0,
-                                    QuestionId = 1
-                                },
-                                new Choice
-                                {
-                                    ChoiceText = "testChoice2",
                                     IsAnswer = true,
                                     IsUsersAnswerCheck = true,
-                                    IsUsersAnswerRadio = 0,
                                     QuestionId = 1
                                 },
                                 new Choice
                                 {
-                                    ChoiceText = "testChoice3",
-                                    IsAnswer = true,
-                                    IsUsersAnswerCheck = false,
-                                    IsUsersAnswerRadio = 0,
-                                    QuestionId = 1
-                                },
-                                new Choice
-                                {
-                                    ChoiceText = "testChoice1",
                                     IsAnswer = false,
                                     IsUsersAnswerCheck = false,
-                                    IsUsersAnswerRadio = 0,
                                     QuestionId = 1
                                 },
+                                new Choice
+                                {
+                                    IsAnswer = true,
+                                    IsUsersAnswerCheck = true,
+                                    QuestionId = 1
+                                },
+                                new Choice
+                                {
+                                    IsAnswer = false,
+                                    IsUsersAnswerCheck = false,
+                                    QuestionId = 1
+                                },
+                            }
+                        }
+
+                    }
+                }
+            };
+        }
+
+        internal static TestViewModel TestViewModelDataForScoreTestSingleCorrectCheck()
+        {
+            return new TestViewModel
+            {
+                Tests = new Test
+                {
+                    Number = 1,
+                    UserId = 1,
+                    Questions = new List<Question>()
+                    {
+                        new Question
+                        {
+                            TestId = 1,
+                            Choices = new List<Choice>()
+                            {
+                                new Choice
+                                {
+                                    IsAnswer = true,
+                                    IsUsersAnswerRadio = 1,
+                                    QuestionId = 1
+                                }
+                            }
+                        }
+
+                    }
+                }
+            };
+        }
+
+        internal static TestViewModel TestViewModelDataForScoreTestSingleFailCheck()
+        {
+            return new TestViewModel
+            {
+                Tests = new Test
+                {
+                    Number = 1,
+                    UserId = 1,
+                    Questions = new List<Question>()
+                    {
+                        new Question
+                        {
+                            TestId = 1,
+                            Choices = new List<Choice>()
+                            {
+                                new Choice
+                                {
+                                    IsAnswer = true,
+                                    IsUsersAnswerRadio = 2,
+                                    QuestionId = 1
+                                }
                             }
                         }
 

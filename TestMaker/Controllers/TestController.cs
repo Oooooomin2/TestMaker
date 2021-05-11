@@ -40,7 +40,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Details";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context));
+            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
         }
 
         public IActionResult SetSettings()
@@ -89,7 +89,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Edit";
             ViewData["Action"] = "Edit";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context));
+            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
         }
 
         // POST: Test/Edit/5
@@ -133,7 +133,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Delete";
             ViewData["Action"] = "Delete";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditInfo(id, _context).Tests);
+            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context).Tests);
         }
 
         // POST: Test/Delete/5
@@ -144,37 +144,29 @@ namespace TestMaker.Controllers
             var test = await _context.Tests.FindAsync(id);
             _context.Tests.Remove(test);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Score(int id, [Bind("Tests")]TestViewModel testViewModel)
         {
-            var questions = _context.Questions.Where(o => o.TestId == id);
-            foreach (var question in questions)
-            {
-                question.Choices = _context.Choices.Where(o => o.QuestionId == question.QuestionId).ToList();
-            }
+            var questions = _context.Questions
+                .Where(o => o.TestId == id)
+                .Include(o => o.Choices);
             var correctCount = 0;
             foreach (var t in testViewModel.Tests.Questions)
             {
                 var q = questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
                 if (t.Choices.Count > 1)
                 {
-                    var answers = q.Choices.Where(o => o.IsAnswer).ToList();
-                    var answersCollection = new List<int>();
-                    foreach (var answer in answers)
-                    {
-                        answersCollection.Add(answer.ChoiceId);
-                    }
-                    var usersAnswers = t.Choices.Where(o => o.IsUsersAnswerCheck).ToList();
-                    var usersAnswersCollection = new List<int>();
-                    foreach (var usersAnswer in usersAnswers)
-                    {
-                        usersAnswersCollection.Add(usersAnswer.ChoiceId);
-                    }
-                    if (answersCollection.SequenceEqual(usersAnswersCollection))
+                    var answers = q.Choices
+                        .Where(o => o.IsAnswer)
+                        .Select(o => o.ChoiceId);
+                    var usersAnswers = t.Choices
+                        .Where(o => o.IsUsersAnswerCheck)
+                        .Select(o => o.ChoiceId);
+                    if (answers.SequenceEqual(usersAnswers))
                     {
                         ViewData[t.QuestionId.ToString()] = "Correct!!";
                         correctCount++;
@@ -188,8 +180,11 @@ namespace TestMaker.Controllers
                 {
                     var answer = q.Choices
                         .Where(o => o.QuestionId == t.QuestionId)
-                        .SingleOrDefault(o => o.IsAnswer).ChoiceId;
-                    var usersAnswer = t.Choices.FirstOrDefault().IsUsersAnswerRadio;
+                        .SingleOrDefault(o => o.IsAnswer)
+                        .ChoiceId;
+                    var usersAnswer = t.Choices
+                        .SingleOrDefault()
+                        .IsUsersAnswerRadio;
                     if (answer == usersAnswer)
                     {
                         ViewData[t.QuestionId.ToString()] = "Correct!!";
@@ -201,18 +196,9 @@ namespace TestMaker.Controllers
                     }
                 }
             }
-            var test = new TestViewModel
-            {
-                Tests = _context.Tests
-                    .FirstOrDefault(m => m.TestId == id),
-                Questions = _context.Questions
-                    .Where(m => m.TestId == id).ToList(),
-                Choices = _context.Choices
-                    .Where(m => m.Question.TestId == id).ToList()
-            };
             ViewData["Score"] = "Score";
             ViewData["CorrectCount"] = correctCount;
-            return View("Details", test);
+            return View("Details", new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
         }
 
         private bool TestExists(int id)
