@@ -68,6 +68,7 @@ namespace TestMaker.Controllers
                 ViewData["Title"] = "Create";
                 ViewData["Action"] = "Create";
                 ViewData["Controller"] = "User";
+                ModelState.AddModelError("LoginId", "The LoginId is unregistered");
                 return View(user);
             }
             if (ModelState.IsValid)
