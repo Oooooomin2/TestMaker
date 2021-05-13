@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using TestMaker.Controllers;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
+using TestMaker.Models.Repository;
 using TestMaker.Models.ViewModels;
 using Xunit;
 
@@ -30,7 +32,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_UserIndex_check_viewData()
+        public void Access_UserIndex_check_viewData()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -39,15 +41,16 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var view = await controller.Index() as ViewResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var view = controller.Index() as ViewResult;
             Assert.Equal("Index", view.ViewData["Title"]);
             Assert.Equal("Index", view.ViewData["Action"]);
             Assert.Equal("User", view.ViewData["Controller"]);
         }
 
         [Fact]
-        public async Task Access_UserDetails_check_whenIdNull_BeNotFound()
+        public void Access_UserDetails_check_whenIdNull_BeNotFound()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -56,8 +59,9 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var actionResult = await controller.Details(null);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
 
@@ -80,7 +84,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_UserDetails_check_viewData()
+        public void Access_UserDetails_check_viewData()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -89,15 +93,16 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var view = await controller.Details(1) as ViewResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var view = controller.Details(1) as ViewResult;
             Assert.Equal("User's information", view.ViewData["Title"]);
             Assert.Equal("Details", view.ViewData["Action"]);
             Assert.Equal("User", view.ViewData["Controller"]);
         }
 
         [Fact]
-        public async Task Access_UserCreate_Check_DuplicateUser()
+        public void Access_UserCreate_Check_DuplicateUser()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -106,14 +111,15 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var view = await controller.Create(model) as ViewResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var view = controller.Create(model) as ViewResult;
             Assert.False(view.ViewData.ModelState.IsValid);
             Assert.Equal("The LoginId is unregistered", view.ViewData.ModelState["LoginId"].Errors[0].ErrorMessage);
         }
 
         [Fact]
-        public async Task Access_UserCreated_Check_RedirectToActionResult()
+        public void Access_UserCreated_Check_RedirectToActionResult()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -122,8 +128,9 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var actionResult = await controller.Create(UserModelTestData.UserCreateData()) as RedirectToActionResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var actionResult =  controller.Create(UserModelTestData.UserCreateData()) as RedirectToActionResult;
             Assert.Equal("Login", actionResult.ActionName);
             Assert.Equal("Account", actionResult.ControllerName);
         }
@@ -148,7 +155,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
             var actionResult = controller.Edit(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -163,7 +171,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
             var view = controller.Edit(1) as ViewResult;
             Assert.Equal("Edit", view.ViewData["Title"]);
             Assert.Equal("Edit", view.ViewData["Action"]);
@@ -191,7 +200,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_UserEdited_Check_WhenIdDifferentPostedData_BeNotFound()
+        public void Access_UserEdited_Check_WhenIdDifferentPostedData_BeNotFound()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -200,13 +209,14 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var actionResult = await controller.Edit(999999, model);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var actionResult = controller.Edit(999999, model);
             Assert.IsType<NotFoundResult>(actionResult);
         }
 
         [Fact]
-        public async Task Access_UserDelete_check_whenIdNull_BeNotFound()
+        public void Access_UserDelete_check_whenIdNull_BeNotFound()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -215,13 +225,14 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var actionResult = await controller.Details(null);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
 
         [Fact]
-        public async Task Access_UserDelete_Check_viewData()
+        public void Access_UserDelete_Check_viewData()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -230,15 +241,16 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var view = await controller.Delete(1) as ViewResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var view = controller.Delete(1) as ViewResult;
             Assert.Equal("Delete", view.ViewData["Title"]);
             Assert.Equal("Delete", view.ViewData["Action"]);
             Assert.Equal("User", view.ViewData["Controller"]);
         }
 
         [Fact]
-        public async Task Access_UserDeleteConfirmed_check_RedirectToActionResult()
+        public void Access_UserDeleteConfirmed_check_RedirectToActionResult()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -247,14 +259,15 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
-            var actionResult = await controller.DeleteConfirmed(1) as RedirectToActionResult;
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            var actionResult = controller.DeleteConfirmed(1) as RedirectToActionResult;
             Assert.Equal("Index", actionResult.ActionName);
             Assert.Equal("Home", actionResult.ControllerName);
         }
 
         [Fact]
-        public async Task Access_UserDeleteConfirmed_Check_db()
+        public void Access_UserDeleteConfirmed_Check_db()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -264,8 +277,9 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             Assert.Equal(1, _context.Users.Count());
-            var controller = new UserController(_context);
-            await controller.DeleteConfirmed(1);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
+            controller.DeleteConfirmed(1);
             Assert.Equal(0, _context.Users.Count());
         }
 
@@ -285,7 +299,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_UserChangePassword_Check_ModelStateIsValid()
+        public void Access_UserChangePassword_Check_ModelStateIsValid()
         {
             var model = UserModelTestData.UserModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -294,9 +308,10 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Users.Add(model);
             _context.SaveChanges();
-            var controller = new UserController(_context);
+            IUserRepository userRepository = new UserRepository(_context);
+            var controller = new UserController(userRepository);
             controller.ModelState.AddModelError("error", "some error");
-            var view = await controller.ChangePassword(model) as ViewResult;
+            var view =  controller.ChangePassword(model) as ViewResult;
             Assert.Equal("Change password", view.ViewData["Title"]);
             Assert.Equal("ChangePassword", view.ViewData["Action"]);
             Assert.Equal("User", view.ViewData["Controller"]);

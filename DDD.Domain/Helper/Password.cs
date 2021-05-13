@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace TestMaker.Models
+namespace DDD.Domain.Helper
 {
     public static class Password
     {

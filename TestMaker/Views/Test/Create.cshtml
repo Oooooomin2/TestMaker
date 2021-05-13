@@ -1,4 +1,4 @@
-﻿@model TestMaker.Models.ViewModels.TestViewModel
+﻿@model TestMaker.Models.Test
 
 @{ 
     var test = new Test
@@ -16,29 +16,29 @@
     <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Tests.UserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value" />
-            <input type="hidden" asp-for="Tests.Title" value="@test.Title" />
-            <input type="hidden" asp-for="Tests.Number" value="@test.Number" />
+            <input type="hidden" asp-for="UserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value" />
+            <input type="hidden" asp-for="Title" value="@test.Title" />
+            <input type="hidden" asp-for="Number" value="@test.Number" />
             @for (var q = 0; q < @test.Number; q++)
             {
                 <div class="form-group">
-                    <label asp-for="Tests.Questions[q].QuestionText" class="control-label">Question @(q + 1)</label>
-                    <input asp-for="Tests.Questions[q].QuestionText" class="form-control" />
+                    <label asp-for="Questions[q].QuestionText" class="control-label">Question @(q + 1)</label>
+                    <input asp-for="Questions[q].QuestionText" class="form-control" />
                     <span asp-validation-for="Questions[q].QuestionText" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     @for (var i = 0; i < 4; i++)
                     {
-                        <label asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
+                        <label asp-for="Questions[q].Choices[i].ChoiceText" class="control-label">ChoiceText @(i + 1)</label>
                         <div class="form-inline">
-                            <input asp-for="Tests.Questions[q].Choices[i].ChoiceText" class="form-control" />
+                            <input asp-for="Questions[q].Choices[i].ChoiceText" class="form-control" />
                             @Html.CheckBoxFor(
-                                model => model.Tests.Questions[q].Choices[i].IsAnswer,
+                                model => model.Questions[q].Choices[i].IsAnswer,
                                 new { @class = "ml-2" }
                             )
                         </div>
                     }
-                    <span asp-validation-for="Tests.Questions[q].Choices" class="text-danger"></span>
+                    <span asp-validation-for="Questions[q].Choices" class="text-danger"></span>
                 </div>
                 <hr />
             }
@@ -50,5 +50,5 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Home" asp-route-id="@Model.Tests.UserId">Back to List</a>
+    <a asp-action="Index" asp-controller="Home">Back to List</a>
 </div>

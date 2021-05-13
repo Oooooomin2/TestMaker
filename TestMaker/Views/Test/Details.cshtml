@@ -1,6 +1,6 @@
-﻿@model TestMaker.Models.ViewModels.TestViewModel
+﻿@model TestMaker.Models.Test
 
-<h1>@Model.Tests.Title</h1>
+<h1>@Model.Title</h1>
 
 <div>
     <div class="row">
@@ -8,14 +8,14 @@
         { 
             <input id="Score" type="hidden" value="Result" />
         }
-        @if (Model.Tests.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
+        @if (Model.UserId == int.Parse(@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value))
         {
             <div class="col-md-1 col-sm-2 col-2">
                 @Html.ActionLink(
                     "Edit",
                     "Edit",
                     "Test",
-                    new { id = Model.Tests.TestId },
+                    new { id = Model.TestId },
                     new { @class = "btn btn-primary" })
             </div>
             <div class="col-md-1 col-sm-2 col-2">
@@ -23,7 +23,7 @@
                     "Delete",
                     "Delete",
                     "Test",
-                    new { id = Model.Tests.TestId },
+                    new { id = Model.TestId },
                     new { @class = "btn btn-danger" })
             </div>
         }
@@ -32,33 +32,34 @@
     @using (Html.BeginForm(
        "Score",
        "Test",
-       new { id = Model.Tests.TestId },
+       new { id = Model.TestId },
        FormMethod.Post))
     {
-        <input type="hidden" asp-for="Tests.UserId" />
-        <input type="hidden" asp-for="Tests.TestId" />
-        <input type="hidden" asp-for="Tests.Number" />
-        @for (var q = 0; q < Model.Tests.Number; q++)
+        <input type="hidden" asp-for="UserId" />
+        <input type="hidden" asp-for="TestId" />
+        <input type="hidden" asp-for="Number" />
+        @for (var q = 0; q < Model.Number; q++)
         {
-            <input type="hidden" asp-for="Tests.Questions[q].QuestionId" />
+            <input type="hidden" asp-for="Questions[q].QuestionId" />
             <div class="container">
                 <div class="mt-4 mb-1">
-                    @(q + 1). @Html.DisplayFor(model => model.Tests.Questions[q].QuestionText)
+                    @(q + 1). @Html.DisplayFor(model => model.Questions[q].QuestionText)
                 </div>
                 <div class="mb-2">
-                    @if (Model.Choices
-                        .Where(o => o.QuestionId == Model.Questions[q].QuestionId)
+                    @if (Model.Questions
+                        .SingleOrDefault(o => o.QuestionId == Model.Questions[q].QuestionId)
+                        .Choices
                         .Count(o => o.IsAnswer) > 1)
                     {
                         <div>
                         @for (var i = 0; i < 4; i++)
                         {
-                                <input type="hidden" asp-for="Tests.Questions[q].Choices[i].ChoiceId" />
+                                <input type="hidden" asp-for="Questions[q].Choices[i].ChoiceId" />
                                 <div>
                                     @Html.CheckBoxFor(
-                                        model => model.Tests.Questions[q].Choices[i].IsUsersAnswerCheck
+                                        model => model.Questions[q].Choices[i].IsUsersAnswerCheck
                                     )
-                                    @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
+                                    @Html.DisplayFor(model => Model.Questions[q].Choices[i].ChoiceText)
                                 </div>
                         }
                         </div>
@@ -69,8 +70,8 @@
                             @for (var i = 0; i < 4; i++)
                             {
                                 <div>
-                                    <input type="radio" asp-for="Tests.Questions[q].Choices[0].IsUsersAnswerRadio" value="@Model.Tests.Questions[q].Choices[i].ChoiceId" />
-                                    @Html.DisplayFor(model => Model.Tests.Questions[q].Choices[i].ChoiceText)
+                                    <input type="radio" asp-for="Questions[q].Choices[0].IsUsersAnswerRadio" value="@Model.Questions[q].Choices[i].ChoiceId" />
+                                    @Html.DisplayFor(model => Model.Questions[q].Choices[i].ChoiceText)
                                 </div>
                             }
                         </div>
@@ -86,13 +87,13 @@
             <input type="submit" value="Score the test" class="btn btn-primary col-4 col-md-2" />
             @if (ViewData["CorrectCount"] != null)
             {
-                <div class="align-items-center d-flex col-2 text-danger">@ViewData["CorrectCount"] / @Model.Tests.Number Correct!!</div>
+                <div class="align-items-center d-flex col-2 text-danger">@ViewData["CorrectCount"] / @Model.Number Correct!!</div>
             }
         </div>
     }
 </div>
 <div>
-    <a asp-action="Index" asp-controller="Home" asp-route-id="@Model.Tests.UserId">Back to List</a>
+    <a asp-action="Index" asp-controller="Home">Back to List</a>
 </div>
 
 @section scripts{ 
