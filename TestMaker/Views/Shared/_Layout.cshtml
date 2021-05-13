@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var isBackGround = User.Identity.IsAuthenticated
+        || ViewData["Action"].ToString() == "Login"
+        || (ViewData["Action"].ToString() == "Create" 
+            && ViewData["Controller"].ToString() == "User");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,7 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body style=@(User.Identity.IsAuthenticated || ViewData["Action"].ToString() == "Login" ? null : "background-image:url(/Images/Home.jpg); background-size: cover;")>
+<body style=@(isBackGround ? null : "background-image:url(/Images/Home.jpg); background-size: cover;")>
     <input id="Action" type="hidden" value="@ViewData["Action"]" />
     <input id="Controller" type="hidden" value="@ViewData["Controller"]" />
     <header>
@@ -27,34 +34,34 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="SetSettings">Create Question</a>
-                            </li>
-                        }
+                                                {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="SetSettings">Create Question</a>
+                        </li>
+                    }
                     </ul>
                     @if (User.Identity.IsAuthenticated)
-                    {
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value">@User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                            </li>
-                        </ul>
-                    }
-                    else
-                    {
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Create">New user regist</a>
-                            </li>
-                        </ul>
-                    }
+                                        {
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Details" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value">@User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </li>
+                    </ul>
+}
+                                    else
+{
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Create">New user regist</a>
+                        </li>
+                    </ul>
+}
                 </div>
             </div>
         </nav>
@@ -74,5 +81,5 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+    </body>
+    </html>

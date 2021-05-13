@@ -65,6 +65,9 @@ namespace TestMaker.Controllers
         {
             if(_context.Users.Where(o => o.LoginId == user.LoginId).Any())
             {
+                ViewData["Title"] = "Create";
+                ViewData["Action"] = "Create";
+                ViewData["Controller"] = "User";
                 return View(user);
             }
             if (ModelState.IsValid)
@@ -75,6 +78,9 @@ namespace TestMaker.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Login", "Account");
             }
+            ViewData["Title"] = "Create";
+            ViewData["Action"] = "Create";
+            ViewData["Controller"] = "User";
             return View(user);
         }
 
