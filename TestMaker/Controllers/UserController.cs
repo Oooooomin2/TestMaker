@@ -165,6 +165,9 @@ namespace TestMaker.Controllers
 
         public async Task<IActionResult> ChangePassword(int id)
         {
+            ViewData["Title"] = "Change password";
+            ViewData["Action"] = "ChangePassword";
+            ViewData["Controller"] = "User";
             return View(await _context.Users.FindAsync(id));
         }
 
@@ -177,8 +180,14 @@ namespace TestMaker.Controllers
                 user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
                 _context.Update(user);
                 await _context.SaveChangesAsync();
+                ViewData["Title"] = "User's information";
+                ViewData["Action"] = "Details";
+                ViewData["Controller"] = "User";
                 return View("Details", user);
             }
+            ViewData["Title"] = "Change password";
+            ViewData["Action"] = "ChangePassword";
+            ViewData["Controller"] = "User";
             return View(user);
         }
 

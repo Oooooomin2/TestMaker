@@ -97,6 +97,38 @@ namespace DDDTest.Tests
         }
 
         [Fact]
+        public async Task Access_UserCreate_Check_DuplicateUser()
+        {
+            var model = UserModelTestData.UserModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_UserCreate_Check_DuplicateUser")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Users.Add(model);
+            _context.SaveChanges();
+            var controller = new UserController(_context);
+            var view = await controller.Create(model) as ViewResult;
+            Assert.False(view.ViewData.ModelState.IsValid);
+            Assert.Equal("The LoginId is unregistered", view.ViewData.ModelState["LoginId"].Errors[0].ErrorMessage);
+        }
+
+        [Fact]
+        public async Task Access_UserCreated_Check_RedirectToActionResult()
+        {
+            var model = UserModelTestData.UserModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_UserCreated_Check_RedirectToActionResult")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Users.Add(model);
+            _context.SaveChanges();
+            var controller = new UserController(_context);
+            var actionResult = await controller.Create(UserModelTestData.UserCreateData()) as RedirectToActionResult;
+            Assert.Equal("Login", actionResult.ActionName);
+            Assert.Equal("Account", actionResult.ControllerName);
+        }
+
+        [Fact]
         public void Access_UserCreate_check_viewData()
         {
             var controller = new UserController(null);
@@ -250,6 +282,24 @@ namespace DDDTest.Tests
             var user = await _context.Users.FindAsync(1);
             Assert.Equal(model.LoginId, user.LoginId);
             Assert.Equal(model.Password, user.Password);
+        }
+
+        [Fact]
+        public async Task Access_UserChangePassword_Check_ModelStateIsValid()
+        {
+            var model = UserModelTestData.UserModelData();
+            var options = new DbContextOptionsBuilder<TestMakerContext>()
+                .UseInMemoryDatabase(databaseName: "Access_UserChangePassword_Check_ModelStateIsValid")
+                .Options;
+            using var _context = new TestMakerContext(options);
+            _context.Users.Add(model);
+            _context.SaveChanges();
+            var controller = new UserController(_context);
+            controller.ModelState.AddModelError("error", "some error");
+            var view = await controller.ChangePassword(model) as ViewResult;
+            Assert.Equal("Change password", view.ViewData["Title"]);
+            Assert.Equal("ChangePassword", view.ViewData["Action"]);
+            Assert.Equal("User", view.ViewData["Controller"]);
         }
     }
 }
