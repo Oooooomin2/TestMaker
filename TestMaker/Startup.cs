@@ -1,18 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TestMaker.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.CookiePolicy;
+using DDD.Domain.Model.Interface;
+using DDD.Domain.Model.Repository;
+using DDD.Domain.Data;
+using DDD.Domain.Models.Repository;
 
 namespace TestMaker
 {
@@ -47,7 +46,11 @@ namespace TestMaker
                 });
             services.AddDbContext<TestMakerContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("TestMakerContext")));
-
+            services.AddTransient<IHomeRepository, HomeRepository>();
+            services.AddTransient<ITestRepository, TestRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

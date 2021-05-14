@@ -1,23 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using DDD.Domain.Model.Interface;
+using DDD.Domain.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Data;
-using TestMaker.Models;
-using TestMaker.Models.ViewModels;
 
 namespace TestMaker.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TestMakerContext _context;
+        private readonly IHomeRepository _homeRepository;
 
-        public HomeController(TestMakerContext context)
+        public HomeController(IHomeRepository homeRepository)
         {
-            _context = context;
+            _homeRepository = homeRepository;
         }
 
         public IActionResult Index()
@@ -25,7 +19,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Home Page";
             ViewData["Action"] = "Index";
             ViewData["Controller"] = "Home";
-            return View(new HomeIndexViewModel().ShowHomeInfo(_context));
+            return View(_homeRepository.GetAll());
         }
 
         public IActionResult Description()
@@ -38,6 +32,9 @@ namespace TestMaker.Controllers
 
         public IActionResult Privacy()
         {
+            ViewData["Title"] = "Privacy";
+            ViewData["Action"] = "Privacy";
+            ViewData["Controller"] = "Home";
             return View();
         }
 

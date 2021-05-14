@@ -1,4 +1,4 @@
-﻿@model TestMaker.Models.ViewModels.UserTestViewModel
+﻿@model IEnumerable<DDD.Domain.Models.Test>
 
 <h1>Index</h1>
 
@@ -6,10 +6,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().Title)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tests.FirstOrDefault().UpdatedTime)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UpdatedTime)
             </th>
             <th>
                 @Html.DisplayName("Creator")
@@ -18,7 +18,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Tests) 
+        @foreach (var item in Model) 
         {
             <tr>
                 <td>
@@ -28,7 +28,7 @@
                     @Html.DisplayFor(modelItem => item.UpdatedTime)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-controller="User" asp-route-id="@item.UserId">@Model.User.UserName</a>
+                    <a asp-action="Details" asp-controller="User" asp-route-id="@item.UserId">@item.User.UserName</a>
                 </td>
             </tr>
         }
