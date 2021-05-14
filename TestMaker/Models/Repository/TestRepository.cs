@@ -31,11 +31,11 @@ namespace TestMaker.Models.Repository
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public void Delete(int id)
         {
-            var target = await _context.Tests.FindAsync(id);
+            var target = _context.Tests.Find(id);
             _context.Tests.Remove(target);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public bool TestExists(int id)

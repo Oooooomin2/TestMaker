@@ -316,7 +316,7 @@ namespace DDDTest.Tests
         }
 
         [Fact]
-        public async Task Access_TestDeleteConfirmed_check_RedirectToActionResult()
+        public void Access_TestDeleteConfirmed_check_RedirectToActionResult()
         {
             var viewModel = TestViewModelTestData.TestViewModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -327,13 +327,13 @@ namespace DDDTest.Tests
             _context.SaveChanges();
             ITestRepository testRepository = new TestRepository(_context);
             var controller = new TestController(testRepository);
-            var actionResult = await controller.DeleteConfirmed(1) as RedirectToActionResult;
+            var actionResult = controller.DeleteConfirmed(1) as RedirectToActionResult;
             Assert.Equal("Index", actionResult.ActionName);
             Assert.Equal("Home", actionResult.ControllerName);
         }
 
         [Fact]
-        public async Task Access_TestDeleteConfirmed_Check_db()
+        public void Access_TestDeleteConfirmed_Check_db()
         {
             var viewModel = TestViewModelTestData.TestViewModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
@@ -345,7 +345,7 @@ namespace DDDTest.Tests
             Assert.Equal(1, _context.Tests.Count());
             ITestRepository testRepository = new TestRepository(_context);
             var controller = new TestController(testRepository);
-            await controller.DeleteConfirmed(1);
+            controller.DeleteConfirmed(1);
             Assert.Equal(0, _context.Tests.Count());
         }
 
