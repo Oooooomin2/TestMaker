@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DDD.Domain.Interface
+namespace DDD.Domain.Model.Interface
 {
     public interface IRepository<T> where T : class
     {

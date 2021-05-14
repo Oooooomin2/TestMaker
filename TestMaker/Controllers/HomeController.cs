@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using DDD.Domain.Model.Interface;
+using DDD.Domain.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Data;
-using TestMaker.Models;
-using TestMaker.Models.Interface;
-using TestMaker.Models.ViewModels;
 
 namespace TestMaker.Controllers
 {

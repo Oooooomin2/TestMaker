@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDD.Domain.Data;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Data;
-using TestMaker.Models;
 
-namespace TestMaker.Validations
+namespace DDD.Domain.Validations
 {
     public class LoginIdUniqueAttribute : ValidationAttribute
     {

@@ -1,10 +1,6 @@
-﻿using System;
+﻿using DDD.Domain.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestMaker.Models;
-using TestMaker.Models.ViewModels;
 
 namespace DDDTest.Tests.Data
 {

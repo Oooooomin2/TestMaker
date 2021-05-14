@@ -1,13 +1,7 @@
-﻿using System;
+﻿using DDD.Domain.Validations;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Validations;
 
-namespace TestMaker.Models
+namespace DDD.Domain.Models
 {
     public class Question
     {

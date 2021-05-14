@@ -1,7 +1,7 @@
-﻿@model TestMaker.Models.Test
+﻿@model DDD.Domain.Models.Test
 
 @{ 
-    var test = new Test
+    var test = new DDD.Domain.Models.Test
     {
         Title = ViewData["Title"].ToString(),
         Number = Int32.Parse(ViewData["Number"].ToString())

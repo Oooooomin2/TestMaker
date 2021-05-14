@@ -17,11 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-    <Folder Include="TestMakerSqlite\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DDD.Domain\DDD.Domain.csproj" />
   </ItemGroup>
 
