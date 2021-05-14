@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DDD.Domain.Helper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +13,18 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
 
 namespace TestMaker.Controllers
 {
     [Authorize]
     public class UserController : Controller
     {
-        private readonly TestMakerContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(TestMakerContext context)
+        public UserController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         // GET: Users
@@ -31,7 +33,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Index";
             ViewData["Action"] = "Index";
             ViewData["Controller"] = "User";
-            return View(await _context.Users.ToListAsync());
+            return View(await _userRepository.GetAll());
         }
 
         // GET: Users/Details/5
@@ -42,7 +44,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "User's information";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "User";
-            return View(await _context.Users.FirstOrDefaultAsync(m => m.UserId == id));
+            return View(await _userRepository.GetContent(id));
         }
 
         [AllowAnonymous]
@@ -63,7 +65,7 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] User user)
         {
-            if(_context.Users.Where(o => o.LoginId == user.LoginId).Any())
+            if(_userRepository.LoginIdExists(user))
             {
                 ViewData["Title"] = "Create";
                 ViewData["Action"] = "Create";
@@ -75,8 +77,7 @@ namespace TestMaker.Controllers
             {
                 user.Salt = Password.CreateSaltBase64();
                 user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await _userRepository.CreateAsync(user);
                 return RedirectToAction("Login", "Account");
             }
             ViewData["Title"] = "Create";
@@ -93,7 +94,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Edit";
             ViewData["Action"] = "Edit";
             ViewData["Controller"] = "User";
-            return View(_context.Users.Find(id));
+            return View(_userRepository.FindUser(id));
         }
 
         // POST: Users/Edit/5
@@ -115,8 +116,7 @@ namespace TestMaker.Controllers
 
             try
             {
-                _context.Update(user);
-                await _context.SaveChangesAsync();
+                await _userRepository.UpdateAsync(user);
                 if (User.FindFirst(ClaimTypes.Name).Value != user.UserName)
                 {
                     var claimsIdentity = new Authenticate(
@@ -129,7 +129,7 @@ namespace TestMaker.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(user.UserId))
+                if (!_userRepository.UserExists(user.UserId))
                 {
                     return NotFound();
                 }
@@ -149,7 +149,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Delete";
             ViewData["Action"] = "Delete";
             ViewData["Controller"] = "User";
-            return View(await _context.Users.FirstOrDefaultAsync(m => m.UserId == id));
+            return View(await _userRepository.GetContent(id));
         }
 
         // POST: Users/Delete/5
@@ -157,18 +157,16 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userRepository.DeleteAsync(id);
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> ChangePassword(int id)
+        public IActionResult ChangePassword(int id)
         {
             ViewData["Title"] = "Change password";
             ViewData["Action"] = "ChangePassword";
             ViewData["Controller"] = "User";
-            return View(await _context.Users.FindAsync(id));
+            return View(_userRepository.FindUser(id));
         }
 
         [HttpPost]
@@ -178,8 +176,7 @@ namespace TestMaker.Controllers
             {
                 user.Salt = Password.CreateSaltBase64();
                 user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
-                _context.Update(user);
-                await _context.SaveChangesAsync();
+                await _userRepository.UpdateAsync(user);
                 ViewData["Title"] = "User's information";
                 ViewData["Action"] = "Details";
                 ViewData["Controller"] = "User";
@@ -189,11 +186,6 @@ namespace TestMaker.Controllers
             ViewData["Action"] = "ChangePassword";
             ViewData["Controller"] = "User";
             return View(user);
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }

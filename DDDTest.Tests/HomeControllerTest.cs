@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using TestMaker.Controllers;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
+using TestMaker.Models.Repository;
 using TestMaker.Models.ViewModels;
 using Xunit;
 
 namespace DDDTest.Tests
 {
-    public class HomeIndexViewModelTest
+    public class HomeControllerTest
     {
         [Fact]
         public void Access_homeIndex_db()
@@ -32,7 +34,8 @@ namespace DDDTest.Tests
                 _context.Users.Add(u);
             }
             _context.SaveChanges();
-            var homeInfoTest = new HomeIndexViewModel().ShowHomeInfo(_context);
+            IHomeRepository homeRepository = new HomeRepository(_context);
+            var homeInfoTest = homeRepository.GetAll();
             Assert.Equal(viewModel.Tests[0].TestId, homeInfoTest.Tests[0].TestId);
             Assert.Equal(viewModel.Tests[0].Title, homeInfoTest.Tests[0].Title);
             Assert.Equal(viewModel.Tests[0].CreatedTime, homeInfoTest.Tests[0].CreatedTime);
@@ -73,7 +76,8 @@ namespace DDDTest.Tests
                 _context.Users.Add(u);
             }
             _context.SaveChanges();
-            var controller = new HomeController(_context);
+            IHomeRepository homeRepository = new HomeRepository(_context);
+            var controller = new HomeController(homeRepository);
             var view = controller.Index() as ViewResult;
             Assert.Equal("Home Page", view.ViewData["Title"]);
             Assert.Equal("Index", view.ViewData["Action"]);

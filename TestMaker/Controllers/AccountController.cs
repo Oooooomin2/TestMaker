@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DDD.Domain.Helper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +11,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
 
 namespace TestMaker.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly TestMakerContext _context;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountController(TestMakerContext context)
+        public AccountController(IAccountRepository accountRepository)
         {
-            _context = context;
+            _accountRepository = accountRepository;
         }
 
 
@@ -34,7 +36,7 @@ namespace TestMaker.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userInfo = _context.Users.SingleOrDefault(o => o.LoginId == loginUser.LoginId);
+                var userInfo = _accountRepository.GetSelectedUser(loginUser);
                 if(userInfo == null)
                 {
                     ModelState.AddModelError("LoginId", "The LoginId is unregistered");
