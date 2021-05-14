@@ -41,7 +41,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Details";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "Test";
-            return View(_testRepository.GetContent(id));
+            return View(_testRepository.GetContent(o => o.TestId == id));
         }
 
         public IActionResult SetSettings()
@@ -67,18 +67,18 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Tests")]TestViewModel testViewModel)
+        public IActionResult Create(Test test)
         {
             if (ModelState.IsValid)
             {
-                testViewModel.Tests.CreatedTime = DateTime.Now;
-                testViewModel.Tests.UpdatedTime = DateTime.Now;
-                _testRepository.Update(testViewModel);
+                test.CreatedTime = DateTime.Now;
+                test.UpdatedTime = DateTime.Now;
+                _testRepository.Create(test);
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["Title"] = testViewModel.Tests.Title;
-            ViewData["Number"] = testViewModel.Tests.Number;
-            return View(testViewModel);
+            ViewData["Title"] = test.Title;
+            ViewData["Number"] = test.Number;
+            return View(test);
         }
 
         // GET: Test/Edit/5
@@ -89,7 +89,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Edit";
             ViewData["Action"] = "Edit";
             ViewData["Controller"] = "Test";
-            return View(_testRepository.GetContent(id));
+            return View(_testRepository.GetContent(o => o.TestId == id));
         }
 
         // POST: Test/Edit/5
@@ -97,20 +97,20 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Tests")]TestViewModel testViewModel)
+        public IActionResult Edit(int id, Test test)
         {
-            if (id != testViewModel.Tests.TestId) return NotFound();
+            if (id != test.TestId) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    testViewModel.Tests.UpdatedTime = DateTime.Now;
-                    _testRepository.Update(testViewModel);
+                    test.UpdatedTime = DateTime.Now;
+                    _testRepository.Update(test);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_testRepository.TestExists(testViewModel.Tests.TestId))
+                    if (!_testRepository.Exists(o => o.TestId == test.TestId))
                     {
                         return NotFound();
                     }
@@ -121,7 +121,7 @@ namespace TestMaker.Controllers
                 }
                 return RedirectToAction("Index", "Home");
             }
-            return View(testViewModel);
+            return View(test);
         }
 
         // GET: Test/Delete/5
@@ -146,11 +146,11 @@ namespace TestMaker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Score(int id, [Bind("Tests")]TestViewModel testViewModel)
+        public IActionResult Score(int id, Test test)
         {
             var questions = _testRepository.GetQuestion(id);
             var correctCount = 0;
-            foreach (var t in testViewModel.Tests.Questions)
+            foreach (var t in test.Questions)
             {
                 var q = questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
                 if (t.Choices.Count > 1)
@@ -193,7 +193,7 @@ namespace TestMaker.Controllers
             }
             ViewData["Score"] = "Score";
             ViewData["CorrectCount"] = correctCount;
-            return View("Details", _testRepository.GetContent(id));
+            return View("Details", _testRepository.GetContent(o => o.TestId == id));
         }
     }
 }

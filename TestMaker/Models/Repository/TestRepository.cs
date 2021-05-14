@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TestMaker.Data;
 using TestMaker.Models.Interface;
@@ -18,15 +19,15 @@ namespace TestMaker.Models.Repository
             _context = context;
         }
 
-        public void Create(TestViewModel viewModel)
+        public void Create(Test model)
         {
-            if (viewModel == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(viewModel));
+                throw new ArgumentNullException(nameof(model));
             }
             else
             {
-                _context.Tests.Add(viewModel.Tests);
+                _context.Tests.Add(model);
                 _context.SaveChanges();
             }
         }
@@ -38,23 +39,17 @@ namespace TestMaker.Models.Repository
             _context.SaveChanges();
         }
 
-        public bool TestExists(int id)
+        public bool Exists(Expression<Func<Test, bool>> expression)
         {
-            return _context.Tests.Any(e => e.TestId == id);
+            return _context.Tests.Any(expression);
         }
-        public TestViewModel GetContent(int? id)
+
+        public Test GetContent(Expression<Func<Test, bool>> expression)
         {
-            return new TestViewModel
-            {
-                Tests = _context.Tests
-                    .SingleOrDefault(m => m.TestId == id),
-                Questions = _context.Questions
-                    .Where(m => m.TestId == id)
-                    .ToList(),
-                Choices = _context.Choices
-                    .Where(m => m.Question.TestId == id)
-                    .ToList()
-            };
+            return _context.Tests
+                .Include(o => o.Questions)
+                .ThenInclude(o => o.Choices)
+                .SingleOrDefault(expression);
         }
 
         public Test GetDeleteContent(int? id)
@@ -62,16 +57,11 @@ namespace TestMaker.Models.Repository
             return _context.Tests.SingleOrDefault(m => m.TestId == id);
         }
 
-        public UserTestViewModel GetAll(int? id)
+        public IEnumerable<Test> GetAll(int? id)
         {
-            return new UserTestViewModel
-            {
-                Tests = _context.Tests
-                    .Where(m => m.UserId == id)
-                    .ToList(),
-                User = _context.Users
-                    .SingleOrDefault(m => m.UserId == id)
-            };
+            return _context.Tests
+                .Where(m => m.UserId == id)
+                .Include(o => o.User);
         }
 
         public IQueryable<Question> GetQuestion(int id)
@@ -81,15 +71,15 @@ namespace TestMaker.Models.Repository
                 .Include(o => o.Choices);
         }
 
-        public void Update(TestViewModel viewModel)
+        public void Update(Test model)
         {
-            if (viewModel == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(viewModel));
+                throw new ArgumentNullException(nameof(model));
             }
             else
             {
-                _context.Tests.Update(viewModel.Tests);
+                _context.Tests.Update(model);
                 _context.SaveChanges();
             }
         }

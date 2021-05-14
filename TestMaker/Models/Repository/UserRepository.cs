@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TestMaker.Data;
 using TestMaker.Models.Interface;
@@ -37,14 +38,14 @@ namespace TestMaker.Models.Repository
             _context.SaveChanges();
         }
 
-        public List<User> GetAll()
+        public IEnumerable<User> GetAll()
         {
             return _context.Users.ToList();
         }
 
-        public User GetContent(int? id)
+        public User GetContent(Expression<Func<User, bool>> expression)
         {
-            return _context.Users.SingleOrDefault(m => m.UserId == id);
+            return _context.Users.SingleOrDefault(expression);
         }
 
         public User FindUser(int? id)
@@ -70,9 +71,9 @@ namespace TestMaker.Models.Repository
             }
         }
 
-        public bool UserExists(int id)
+        public bool Exists(Expression<Func<User, bool>> expression)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Users.Any(expression);
         }
     }
 }
