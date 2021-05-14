@@ -24,8 +24,4 @@
     <ProjectReference Include="..\DDD.Domain\DDD.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
-
 </Project>
