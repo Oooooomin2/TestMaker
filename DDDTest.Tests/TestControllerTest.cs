@@ -1,16 +1,11 @@
+using DDD.Domain.Data;
+using DDD.Domain.Model.Interface;
+using DDD.Domain.Models.Repository;
 using DDDTest.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TestMaker.Controllers;
-using TestMaker.Data;
-using TestMaker.Models;
-using TestMaker.Models.Interface;
-using TestMaker.Models.Repository;
-using TestMaker.Models.ViewModels;
 using Xunit;
 
 namespace DDDTest.Tests

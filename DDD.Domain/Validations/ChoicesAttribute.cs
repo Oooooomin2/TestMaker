@@ -1,11 +1,9 @@
-﻿using System;
+﻿using DDD.Domain.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Models;
 
-namespace TestMaker.Validations
+namespace DDD.Domain.Validations
 {
     public class ChoicesAttribute : ValidationAttribute
     {

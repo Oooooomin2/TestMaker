@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestMaker.Models
+namespace DDD.Domain.Models
 {
     public class Choice
     {

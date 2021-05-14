@@ -1,14 +1,12 @@
-﻿using DDD.Domain.Interface;
+﻿using DDD.Domain.Data;
+using DDD.Domain.Model.Interface;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using TestMaker.Data;
 
-namespace TestMaker.Models.Repository
+namespace DDD.Domain.Models.Repository
 {
-    public class GenericRepository<T> : IRepository<T> 
+    public class GenericRepository<T> : IRepository<T>
         where T : class
     {
         private readonly TestMakerContext _context;

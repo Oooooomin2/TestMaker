@@ -1,12 +1,9 @@
-﻿using DDD.Domain.Interface;
+﻿using DDD.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using TestMaker.Models.ViewModels;
 
-namespace TestMaker.Models.Interface
+namespace DDD.Domain.Model.Interface
 {
     public interface IUserRepository : IRepository<User>
     {

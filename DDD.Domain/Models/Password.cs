@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace DDD.Domain.Helper
+namespace DDD.Domain.Models
 {
     public static class Password
     {

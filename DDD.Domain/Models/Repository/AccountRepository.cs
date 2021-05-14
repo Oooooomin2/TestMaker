@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDD.Domain.Data;
+using DDD.Domain.Model.Interface;
+using DDD.Domain.Models;
 using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Data;
-using TestMaker.Models.Interface;
-using TestMaker.Models.ViewModels;
 
-namespace TestMaker.Models.Repository
+namespace DDD.Domain.Model.Repository
 {
     public class AccountRepository : IAccountRepository
     {
