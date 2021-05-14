@@ -1,21 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TestMaker.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.CookiePolicy;
-using TestMaker.Models.Interface;
-using TestMaker.Models.Repository;
-using DDD.Domain.Interface;
+using DDD.Domain.Model.Interface;
+using DDD.Domain.Model.Repository;
+using DDD.Domain.Data;
+using DDD.Domain.Models.Repository;
 
 namespace TestMaker
 {

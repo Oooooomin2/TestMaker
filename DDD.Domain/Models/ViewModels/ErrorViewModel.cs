@@ -1,6 +1,6 @@
 using System;
 
-namespace TestMaker.Models
+namespace DDD.Domain.Models.ViewModels
 {
     public class ErrorViewModel
     {

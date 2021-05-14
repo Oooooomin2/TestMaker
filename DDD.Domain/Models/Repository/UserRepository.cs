@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DDD.Domain.Data;
+using DDD.Domain.Model.Interface;
+using DDD.Domain.Models;
+using DDD.Domain.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using TestMaker.Data;
-using TestMaker.Models.Interface;
 
-namespace TestMaker.Models.Repository
+namespace DDD.Domain.Model.Repository
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {

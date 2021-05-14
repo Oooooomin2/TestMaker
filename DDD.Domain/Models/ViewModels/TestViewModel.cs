@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TestMaker.Data;
+﻿using System.Collections.Generic;
 
-namespace TestMaker.Models.ViewModels
+namespace DDD.Domain.Models.ViewModels
 {
     public class TestViewModel
     {
