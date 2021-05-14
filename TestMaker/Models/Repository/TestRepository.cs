@@ -10,40 +10,15 @@ using TestMaker.Models.ViewModels;
 
 namespace TestMaker.Models.Repository
 {
-    public class TestRepository : ITestRepository
+    public class TestRepository : GenericRepository<Test>, ITestRepository
     {
         private readonly TestMakerContext _context;
 
         public TestRepository(TestMakerContext context)
+            : base(context)
         {
             _context = context;
         }
-
-        public void Create(Test model)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-            else
-            {
-                _context.Tests.Add(model);
-                _context.SaveChanges();
-            }
-        }
-
-        public void Delete(int id)
-        {
-            var target = _context.Tests.Find(id);
-            _context.Tests.Remove(target);
-            _context.SaveChanges();
-        }
-
-        public bool Exists(Expression<Func<Test, bool>> expression)
-        {
-            return _context.Tests.Any(expression);
-        }
-
         public Test GetContent(Expression<Func<Test, bool>> expression)
         {
             return _context.Tests
@@ -51,7 +26,6 @@ namespace TestMaker.Models.Repository
                 .ThenInclude(o => o.Choices)
                 .SingleOrDefault(expression);
         }
-
         public Test GetDeleteContent(int? id)
         {
             return _context.Tests.SingleOrDefault(m => m.TestId == id);
@@ -70,19 +44,5 @@ namespace TestMaker.Models.Repository
                 .Where(o => o.TestId == id)
                 .Include(o => o.Choices);
         }
-
-        public void Update(Test model)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-            else
-            {
-                _context.Tests.Update(model);
-                _context.SaveChanges();
-            }
-        }
-
     }
 }

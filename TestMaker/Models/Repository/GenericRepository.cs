@@ -37,11 +37,6 @@ namespace TestMaker.Models.Repository
             _context.SaveChanges();
         }
 
-        public T GetContent(Expression<Func<T, bool>> expression)
-        {
-            return _context.Set<T>().SingleOrDefault(expression);
-        }
-
         public bool Exists(Expression<Func<T, bool>> expression)
         {
             return _context.Set<T>().Any(expression);

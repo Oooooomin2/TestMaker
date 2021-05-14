@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.CookiePolicy;
 using TestMaker.Models.Interface;
 using TestMaker.Models.Repository;
+using DDD.Domain.Interface;
 
 namespace TestMaker
 {
@@ -53,6 +54,7 @@ namespace TestMaker
             services.AddTransient<ITestRepository, TestRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
