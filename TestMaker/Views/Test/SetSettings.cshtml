@@ -1,4 +1,4 @@
-﻿@model TestMaker.Models.ViewModels.TestViewModel
+﻿@model TestMaker.Models.Test
 
 <h1>Set question settings</h1>
 
@@ -8,14 +8,14 @@
         <form asp-action="Create" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Tests.Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label"></label>
                 <input type="text" name="title" class="form-control" />
-                <span asp-validation-for="Tests.Title" class="text-danger"></span>
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Tests.Number" class="control-label">Number</label>
+                <label asp-for="Number" class="control-label">Number</label>
                 <input type="number" name="number" class="form-control" />
-                <span asp-validation-for="Tests.Number" class="text-danger"></span>
+                <span asp-validation-for="Number" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Next" class="btn btn-primary" />

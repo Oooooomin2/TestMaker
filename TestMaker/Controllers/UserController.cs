@@ -44,7 +44,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "User's information";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "User";
-            return View(_userRepository.GetContent(id));
+            return View(_userRepository.GetContent(o => o.UserId == id));
         }
 
         [AllowAnonymous]
@@ -129,7 +129,7 @@ namespace TestMaker.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_userRepository.UserExists(user.UserId))
+                if (!_userRepository.Exists(o => o.UserId == user.UserId))
                 {
                     return NotFound();
                 }
@@ -149,7 +149,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Delete";
             ViewData["Action"] = "Delete";
             ViewData["Controller"] = "User";
-            return View(_userRepository.GetContent(id));
+            return View(_userRepository.GetContent(o => o.UserId == id));
         }
 
         // POST: Users/Delete/5
