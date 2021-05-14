@@ -138,9 +138,9 @@ namespace TestMaker.Controllers
         // POST: Test/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            await _testRepository.DeleteAsync(id);
+            _testRepository.Delete(id);
             return RedirectToAction("Index", "Home");
         }
 

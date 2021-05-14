@@ -17,7 +17,7 @@ namespace TestMaker.Models.Repository
             _context = context;
         }
 
-        public async Task CreateAsync(User model)
+        public void Create(User model)
         {
             if (model == null)
             {
@@ -25,26 +25,26 @@ namespace TestMaker.Models.Repository
             }
             else
             {
-                await _context.Users.AddAsync(model);
+                _context.Users.Add(model);
                 _context.SaveChanges();
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public void Delete(int id)
         {
-            var target = await _context.Users.FindAsync(id);
+            var target = _context.Users.Find(id);
             _context.Users.Remove(target);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async Task<List<User>> GetAll()
+        public List<User> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return _context.Users.ToList();
         }
 
-        public async Task<User> GetContent(int? id)
+        public User GetContent(int? id)
         {
-            return await _context.Users.SingleOrDefaultAsync(m => m.UserId == id);
+            return _context.Users.SingleOrDefault(m => m.UserId == id);
         }
 
         public User FindUser(int? id)
@@ -57,7 +57,7 @@ namespace TestMaker.Models.Repository
             return _context.Users.Where(o => o.LoginId == user.LoginId).Any();
         }
 
-        public async Task UpdateAsync(User model)
+        public void Update(User model)
         {
             if (model == null)
             {
@@ -66,7 +66,7 @@ namespace TestMaker.Models.Repository
             else
             {
                 _context.Users.Update(model);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
         }
 

@@ -12,7 +12,7 @@ namespace TestMaker.Models.Interface
 
         public void Update(TestViewModel viewModel);
 
-        public Task DeleteAsync(int id);
+        public void Delete(int id);
 
         public TestViewModel GetContent(int? id);
 

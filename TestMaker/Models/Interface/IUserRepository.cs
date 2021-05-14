@@ -8,19 +8,19 @@ namespace TestMaker.Models.Interface
 {
     public interface IUserRepository
     {
-        public Task CreateAsync(User model);
+        public void Create(User model);
 
-        public Task UpdateAsync(User model);
+        public void Update(User model);
 
-        public Task DeleteAsync(int id);
+        public void Delete(int id);
 
-        public Task<User> GetContent(int? id);
+        public User GetContent(int? id);
 
         public User FindUser(int? id);
 
         public bool LoginIdExists(User user);
 
-        public Task<List<User>> GetAll();
+        public List<User> GetAll();
 
         public bool UserExists(int id);
     }

@@ -28,23 +28,23 @@ namespace TestMaker.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewData["Title"] = "Index";
             ViewData["Action"] = "Index";
             ViewData["Controller"] = "User";
-            return View(await _userRepository.GetAll());
+            return View(_userRepository.GetAll());
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null) return NotFound();
 
             ViewData["Title"] = "User's information";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "User";
-            return View(await _userRepository.GetContent(id));
+            return View(_userRepository.GetContent(id));
         }
 
         [AllowAnonymous]
@@ -63,7 +63,7 @@ namespace TestMaker.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] User user)
+        public IActionResult Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] User user)
         {
             if(_userRepository.LoginIdExists(user))
             {
@@ -77,7 +77,7 @@ namespace TestMaker.Controllers
             {
                 user.Salt = Password.CreateSaltBase64();
                 user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
-                await _userRepository.CreateAsync(user);
+                _userRepository.Create(user);
                 return RedirectToAction("Login", "Account");
             }
             ViewData["Title"] = "Create";
@@ -102,7 +102,7 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,LoginId,Password,ConfirmPassword,Salt,UserName,SelfIntroduction,Icon")] User user)
+        public IActionResult Edit(int id, [Bind("UserId,LoginId,Password,ConfirmPassword,Salt,UserName,SelfIntroduction,Icon")] User user)
         {
             if (id != user.UserId) return NotFound();
 
@@ -110,19 +110,19 @@ namespace TestMaker.Controllers
             if (files.Any())
             {
                 using var memoryStream = new MemoryStream();
-                await files.SingleOrDefault().CopyToAsync(memoryStream);
+                files.SingleOrDefault().CopyTo(memoryStream);
                 user.Icon = memoryStream.ToArray();
             }
 
             try
             {
-                await _userRepository.UpdateAsync(user);
+                _userRepository.Update(user);
                 if (User.FindFirst(ClaimTypes.Name).Value != user.UserName)
                 {
                     var claimsIdentity = new Authenticate(
                         userId: user.UserId,
                         userName: user.UserName).CreateClaimsIdentity();
-                    await HttpContext.SignInAsync(
+                    HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity));
                 }
@@ -142,22 +142,22 @@ namespace TestMaker.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null) return NotFound();
 
             ViewData["Title"] = "Delete";
             ViewData["Action"] = "Delete";
             ViewData["Controller"] = "User";
-            return View(await _userRepository.GetContent(id));
+            return View(_userRepository.GetContent(id));
         }
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            await _userRepository.DeleteAsync(id);
+             _userRepository.Delete(id);
             return RedirectToAction("Index", "Home");
         }
 
@@ -170,13 +170,13 @@ namespace TestMaker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword([Bind("UserId,LoginId,UserName,Password,ConfirmPassword,SelfIntroduction,Icon")] User user)
+        public IActionResult ChangePassword([Bind("UserId,LoginId,UserName,Password,ConfirmPassword,SelfIntroduction,Icon")] User user)
         {
             if (ModelState.IsValid)
             {
                 user.Salt = Password.CreateSaltBase64();
                 user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
-                await _userRepository.UpdateAsync(user);
+                _userRepository.Update(user);
                 ViewData["Title"] = "User's information";
                 ViewData["Action"] = "Details";
                 ViewData["Controller"] = "User";
