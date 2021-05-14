@@ -15,8 +15,6 @@ namespace DDD.Domain.Interface
 
         public void Delete(int id);
 
-        public T GetContent(Expression<Func<T, bool>> expression);
-
         public bool Exists(Expression<Func<T, bool>> expression);
     }
 }
