@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using TestMaker.Controllers;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
+using TestMaker.Models.Repository;
 using TestMaker.Models.ViewModels;
 using Xunit;
 
 namespace DDDTest.Tests
 {
-    public class TestViewModelTest
+    public class TestControllerTest
     {
         [Fact]
         public void Access_TestIndex_db()
@@ -29,7 +31,8 @@ namespace DDDTest.Tests
             }
             _context.Users.Add(viewModel.User);
             _context.SaveChanges();
-            var testInfoTest = new UserTestViewModel().ShowTestIndexInfo(1, _context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var testInfoTest = testRepository.GetAll(1);
             Assert.Equal(viewModel.Tests[0].TestId, testInfoTest.Tests[0].TestId);
             Assert.Equal(viewModel.Tests[0].Title, testInfoTest.Tests[0].Title);
             Assert.Equal(viewModel.Tests[0].CreatedTime, testInfoTest.Tests[0].CreatedTime);
@@ -60,13 +63,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestIndex_check_viewData")
                 .Options;
             using var _context = new TestMakerContext(options);
-            foreach (var t in viewModel.Tests)
-            {
-                _context.Tests.Add(t);
-            }
-            _context.Users.Add(viewModel.User);
-            _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Index(1) as ViewResult;
             Assert.Equal("Index", view.ViewData["Title"]);
             Assert.Equal("Index", view.ViewData["Action"]);
@@ -81,14 +79,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestDetails_check_whenIdNull_BeNotFound")
                 .Options;
             using var _context = new TestMakerContext(options);
-            foreach (var t in viewModel.Tests)
-            {
-                _context.Tests.Add(t);
-            }
-            _context.Users.Add(viewModel.User);
-            _context.SaveChanges();
-
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -111,7 +103,8 @@ namespace DDDTest.Tests
                 _context.Choices.Add(c);
             }
             _context.SaveChanges();
-            var testInfoTest = new TestViewModel().ShowTestDetailsEditScoreInfo(1, _context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var testInfoTest = testRepository.GetContent(1);
             Assert.Equal(viewModel.Tests.TestId, testInfoTest.Tests.TestId);
             Assert.Equal(viewModel.Tests.Title, testInfoTest.Tests.Title);
             Assert.Equal(viewModel.Tests.CreatedTime, testInfoTest.Tests.CreatedTime);
@@ -148,7 +141,8 @@ namespace DDDTest.Tests
                 _context.Choices.Add(c);
             }
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Details(1) as ViewResult;
             Assert.Equal("Details", view.ViewData["Title"]);
             Assert.Equal("Details", view.ViewData["Action"]);
@@ -184,7 +178,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestCreated_check_viewData")
                 .Options;
             using var _context = new TestMakerContext(options);
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = controller.Create(viewModel) as RedirectToActionResult;
             Assert.Equal("Index", actionResult.ActionName);
             Assert.Equal("Home", actionResult.ControllerName);
@@ -198,7 +193,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestCreated_Check_db")
                 .Options;
             using var _context = new TestMakerContext(options);
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = controller.Create(viewModel);
             Assert.Equal(viewModel.Tests.TestId, _context.Tests.FirstOrDefault().TestId);
             Assert.Equal(viewModel.Tests.Title, _context.Tests.FirstOrDefault().Title);
@@ -226,7 +222,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestCreated_Check_GivenInvalidModel")
                 .Options;
             using var _context = new TestMakerContext(options);
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             controller.ModelState.AddModelError("error", "some error");
             var view = controller.Create(viewModel) as ViewResult;
             Assert.Equal(viewModel.Tests.Title, view.ViewData["Title"]);
@@ -241,17 +238,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestEdit_Check_viewData")
                 .Options;
             using var _context = new TestMakerContext(options);
-            _context.Tests.Add(viewModel.Tests);
-            foreach (var q in viewModel.Questions)
-            {
-                _context.Questions.Add(q);
-            }
-            foreach (var c in viewModel.Choices)
-            {
-                _context.Choices.Add(c);
-            }
-            _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Edit(1) as ViewResult;
             Assert.Equal("Edit", view.ViewData["Title"]);
             Assert.Equal("Edit", view.ViewData["Action"]);
@@ -266,17 +254,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestEdited_Check_WhenIdDifferentPostedData_BeNotFound")
                 .Options;
             using var _context = new TestMakerContext(options);
-            _context.Tests.Add(viewModel.Tests);
-            foreach (var q in viewModel.Questions)
-            {
-                _context.Questions.Add(q);
-            }
-            foreach (var c in viewModel.Choices)
-            {
-                _context.Choices.Add(c);
-            }
-            _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = controller.Edit(999999, viewModel);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -299,7 +278,8 @@ namespace DDDTest.Tests
                 _context.Choices.Add(c);
             }
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             controller.ModelState.AddModelError("error", "some error");
             var view = controller.Edit(1, viewModel) as ViewResult;
             Assert.Null(view.ViewName);
@@ -313,14 +293,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestDelete_check_whenIdNull_BeNotFound")
                 .Options;
             using var _context = new TestMakerContext(options);
-            foreach (var t in viewModel.Tests)
-            {
-                _context.Tests.Add(t);
-            }
-            _context.Users.Add(viewModel.User);
-            _context.SaveChanges();
-
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -333,17 +307,8 @@ namespace DDDTest.Tests
                 .UseInMemoryDatabase(databaseName: "Access_TestDelete_Check_viewData")
                 .Options;
             using var _context = new TestMakerContext(options);
-            _context.Tests.Add(viewModel.Tests);
-            foreach (var q in viewModel.Questions)
-            {
-                _context.Questions.Add(q);
-            }
-            foreach (var c in viewModel.Choices)
-            {
-                _context.Choices.Add(c);
-            }
-            _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Delete(1) as ViewResult;
             Assert.Equal("Delete", view.ViewData["Title"]);
             Assert.Equal("Delete", view.ViewData["Action"]);
@@ -360,7 +325,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var actionResult = await controller.DeleteConfirmed(1) as RedirectToActionResult;
             Assert.Equal("Index", actionResult.ActionName);
             Assert.Equal("Home", actionResult.ControllerName);
@@ -377,7 +343,8 @@ namespace DDDTest.Tests
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
             Assert.Equal(1, _context.Tests.Count());
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             await controller.DeleteConfirmed(1);
             Assert.Equal(0, _context.Tests.Count());
         }
@@ -392,7 +359,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Score(1, viewModel) as ViewResult;
             Assert.Equal(0, view.ViewData["CorrectCount"]);
             Assert.Equal("Score", view.ViewData["Score"]);
@@ -409,7 +377,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Score(1, viewModel) as ViewResult;
             Assert.Equal(1, view.ViewData["CorrectCount"]);
             Assert.Equal("Score", view.ViewData["Score"]);
@@ -426,7 +395,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Score(1, viewModel) as ViewResult;
             Assert.Equal(0, view.ViewData["CorrectCount"]);
             Assert.Equal("Score", view.ViewData["Score"]);
@@ -443,7 +413,8 @@ namespace DDDTest.Tests
             using var _context = new TestMakerContext(options);
             _context.Tests.Add(viewModel.Tests);
             _context.SaveChanges();
-            var controller = new TestController(_context);
+            ITestRepository testRepository = new TestRepository(_context);
+            var controller = new TestController(testRepository);
             var view = controller.Score(1, viewModel) as ViewResult;
             Assert.Equal(1, view.ViewData["CorrectCount"]);
             Assert.Equal("Score", view.ViewData["Score"]);

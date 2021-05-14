@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestMaker.Data;
 using TestMaker.Models;
+using TestMaker.Models.Interface;
 using TestMaker.Models.ViewModels;
 
 namespace TestMaker.Controllers
@@ -16,11 +17,11 @@ namespace TestMaker.Controllers
     [Authorize]
     public class TestController : Controller
     {
-        private readonly TestMakerContext _context;
+        private readonly ITestRepository _testRepository;
 
-        public TestController(TestMakerContext context)
+        public TestController(ITestRepository testRepository)
         {
-            _context = context;
+            _testRepository = testRepository;
         }
 
         // GET: Test/Index/5
@@ -29,7 +30,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Index";
             ViewData["Action"] = "Index";
             ViewData["Controller"] = "Test";
-            return View(new UserTestViewModel().ShowTestIndexInfo(id, _context));
+            return View(_testRepository.GetAll(id));
         }
 
         // GET: Test/Details/5
@@ -40,7 +41,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Details";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
+            return View(_testRepository.GetContent(id));
         }
 
         public IActionResult SetSettings()
@@ -72,8 +73,7 @@ namespace TestMaker.Controllers
             {
                 testViewModel.Tests.CreatedTime = DateTime.Now;
                 testViewModel.Tests.UpdatedTime = DateTime.Now;
-                _context.Tests.Add(testViewModel.Tests);
-                _context.SaveChanges();
+                _testRepository.Update(testViewModel);
                 return RedirectToAction("Index", "Home");
             }
             ViewData["Title"] = testViewModel.Tests.Title;
@@ -89,7 +89,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Edit";
             ViewData["Action"] = "Edit";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
+            return View(_testRepository.GetContent(id));
         }
 
         // POST: Test/Edit/5
@@ -106,12 +106,11 @@ namespace TestMaker.Controllers
                 try
                 {
                     testViewModel.Tests.UpdatedTime = DateTime.Now;
-                    _context.Tests.Update(testViewModel.Tests);
-                    _context.SaveChanges();
+                    _testRepository.Update(testViewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TestExists(testViewModel.Tests.TestId))
+                    if (!_testRepository.TestExists(testViewModel.Tests.TestId))
                     {
                         return NotFound();
                     }
@@ -133,7 +132,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Delete";
             ViewData["Action"] = "Delete";
             ViewData["Controller"] = "Test";
-            return View(new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context).Tests);
+            return View(_testRepository.GetDeleteContent(id));
         }
 
         // POST: Test/Delete/5
@@ -141,9 +140,7 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var test = await _context.Tests.FindAsync(id);
-            _context.Tests.Remove(test);
-            await _context.SaveChangesAsync();
+            await _testRepository.DeleteAsync(id);
             return RedirectToAction("Index", "Home");
         }
 
@@ -151,9 +148,7 @@ namespace TestMaker.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Score(int id, [Bind("Tests")]TestViewModel testViewModel)
         {
-            var questions = _context.Questions
-                .Where(o => o.TestId == id)
-                .Include(o => o.Choices);
+            var questions = _testRepository.GetQuestion(id);
             var correctCount = 0;
             foreach (var t in testViewModel.Tests.Questions)
             {
@@ -198,12 +193,7 @@ namespace TestMaker.Controllers
             }
             ViewData["Score"] = "Score";
             ViewData["CorrectCount"] = correctCount;
-            return View("Details", new TestViewModel().ShowTestDetailsEditScoreInfo(id, _context));
-        }
-
-        private bool TestExists(int id)
-        {
-            return _context.Tests.Any(e => e.TestId == id);
+            return View("Details", _testRepository.GetContent(id));
         }
     }
 }
