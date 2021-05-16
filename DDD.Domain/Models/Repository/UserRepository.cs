@@ -21,7 +21,7 @@ namespace DDD.Domain.Model.Repository
 
         public IEnumerable<User> GetAll()
         {
-            return _context.Users.ToList();
+            return _context.Users;
         }
         public User GetContent(Expression<Func<User, bool>> expression)
         {
