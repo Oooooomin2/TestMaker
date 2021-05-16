@@ -4,6 +4,6 @@ namespace DDD.Domain.Model.Interface
 {
     public interface IHomeRepository
     {
-        public HomeIndexViewModel GetAll();
+        public HomeViewModel GetAll();
     }
 }

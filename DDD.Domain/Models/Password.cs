@@ -8,6 +8,7 @@ namespace DDD.Domain.Models
         public static readonly int saltSize = 32;
         public static readonly int hashSize = 32;
         public static readonly int iteration = 10000;
+
         private static byte[] CreateSalt(int size)
         {
             var bytes = new byte[size];

@@ -14,9 +14,9 @@ namespace DDD.Domain.Model.Repository
             _context = context;
         }
 
-        public HomeIndexViewModel GetAll()
+        public HomeViewModel GetAll()
         {
-            return new HomeIndexViewModel
+            return new HomeViewModel
             {
                 Tests = _context.Tests.ToList(),
                 Users = _context.Users.ToList()

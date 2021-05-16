@@ -19,6 +19,9 @@ namespace TestMaker.Controllers
 
         public IActionResult Login()
         {
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Account";
+            ViewData["Title"] = "Login";
             return View();
         }
 

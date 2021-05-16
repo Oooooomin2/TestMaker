@@ -61,7 +61,8 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Test test)
+        public IActionResult Create(
+            [Bind("TestId,Title,Number,CreatedTime,UpdatedTime,UserId,User,Questions")] Test test)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +92,9 @@ namespace TestMaker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Test test)
+        public IActionResult Edit(
+            int id,
+            [Bind("TestId,Title,Number,CreatedTime,UpdatedTime,UserId,User,Questions")] Test test)
         {
             if (id != test.TestId) return NotFound();
 
@@ -140,16 +143,18 @@ namespace TestMaker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Score(int id, Test test)
+        public IActionResult Score(
+            int id,
+            [Bind("TestId,Title,Number,CreatedTime,UpdatedTime,UserId,User,Questions")] Test test)
         {
             var questions = _testRepository.GetQuestion(id);
             var correctCount = 0;
             foreach (var t in test.Questions)
             {
-                var q = questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
+                var question = questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
                 if (t.Choices.Count > 1)
                 {
-                    var answers = q.Choices
+                    var answers = question.Choices
                         .Where(o => o.IsAnswer)
                         .Select(o => o.ChoiceId);
                     var usersAnswers = t.Choices
@@ -167,7 +172,7 @@ namespace TestMaker.Controllers
                 }
                 else
                 {
-                    var answer = q.Choices
+                    var answer = question.Choices
                         .Where(o => o.QuestionId == t.QuestionId)
                         .SingleOrDefault(o => o.IsAnswer)
                         .ChoiceId;

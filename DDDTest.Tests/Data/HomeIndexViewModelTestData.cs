@@ -7,9 +7,9 @@ namespace DDDTest.Tests.ViewModelData
 {
     internal static class HomeIndexViewModelTestData
     {
-        internal static HomeIndexViewModel HomeIndexViewModelData()
+        internal static HomeViewModel HomeIndexViewModelData()
         {
-            return new HomeIndexViewModel
+            return new HomeViewModel
             {
                 Tests = new List<Test>()
                 {
