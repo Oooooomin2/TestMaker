@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DDD.Domain.Models;
+﻿using DDD.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DDD.Domain.Data

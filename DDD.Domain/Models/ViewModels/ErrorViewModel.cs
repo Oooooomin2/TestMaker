@@ -1,5 +1,3 @@
-using System;
-
 namespace DDD.Domain.Models.ViewModels
 {
     public class ErrorViewModel
