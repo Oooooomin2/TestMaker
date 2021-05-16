@@ -5,7 +5,6 @@ using DDD.Domain.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TestMaker.Controllers
 {
@@ -17,7 +16,6 @@ namespace TestMaker.Controllers
         {
             _accountRepository = accountRepository;
         }
-
 
         public IActionResult Login()
         {
