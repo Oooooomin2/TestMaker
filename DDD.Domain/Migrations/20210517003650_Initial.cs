@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TestMaker.Migrations
+namespace DDD.Domain.Migrations
 {
     public partial class Initial : Migration
     {
