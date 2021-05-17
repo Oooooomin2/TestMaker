@@ -3,22 +3,20 @@ using System;
 using DDD.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TestMaker.Migrations
+namespace DDD.Domain.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210502013748_Initial")]
-    partial class Initial
+    partial class TestMakerContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("TestMaker.Models.Choice", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Choice", b =>
                 {
                     b.Property<int>("ChoiceId")
                         .ValueGeneratedOnAdd()
@@ -40,7 +38,7 @@ namespace TestMaker.Migrations
                     b.ToTable("Choices");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Question", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Question", b =>
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
@@ -59,7 +57,7 @@ namespace TestMaker.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Test", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Test", b =>
                 {
                     b.Property<int>("TestId")
                         .ValueGeneratedOnAdd()
@@ -87,7 +85,7 @@ namespace TestMaker.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.User", b =>
+            modelBuilder.Entity("DDD.Domain.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -118,9 +116,9 @@ namespace TestMaker.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Choice", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Choice", b =>
                 {
-                    b.HasOne("TestMaker.Models.Question", "Question")
+                    b.HasOne("DDD.Domain.Models.Question", "Question")
                         .WithMany("Choices")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -129,9 +127,9 @@ namespace TestMaker.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Question", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Question", b =>
                 {
-                    b.HasOne("TestMaker.Models.Test", "Test")
+                    b.HasOne("DDD.Domain.Models.Test", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -140,9 +138,9 @@ namespace TestMaker.Migrations
                     b.Navigation("Test");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Test", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Test", b =>
                 {
-                    b.HasOne("TestMaker.Models.User", "User")
+                    b.HasOne("DDD.Domain.Models.User", "User")
                         .WithMany("Tests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -151,17 +149,17 @@ namespace TestMaker.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Question", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Question", b =>
                 {
                     b.Navigation("Choices");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.Test", b =>
+            modelBuilder.Entity("DDD.Domain.Models.Test", b =>
                 {
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("TestMaker.Models.User", b =>
+            modelBuilder.Entity("DDD.Domain.Models.User", b =>
                 {
                     b.Navigation("Tests");
                 });

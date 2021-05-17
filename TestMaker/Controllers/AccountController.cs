@@ -35,6 +35,9 @@ namespace TestMaker.Controllers
                 if(userInfo == null)
                 {
                     ModelState.AddModelError("LoginId", "The LoginId is unregistered");
+                    ViewData["Action"] = "Login";
+                    ViewData["Controller"] = "Account";
+                    ViewData["Title"] = "Login";
                     return View(loginUser);
                 }
                 var inputHashText = Password.CreateHashTextBase64(userInfo.Salt, loginUser.Password);
@@ -51,9 +54,15 @@ namespace TestMaker.Controllers
                 else
                 {
                     ModelState.AddModelError("Password", "The Password is incorrect.");
+                    ViewData["Action"] = "Login";
+                    ViewData["Controller"] = "Account";
+                    ViewData["Title"] = "Login";
                     return View(loginUser);
                 }
             }
+            ViewData["Action"] = "Login";
+            ViewData["Controller"] = "Account";
+            ViewData["Title"] = "Login";
             return View(loginUser);
         }
 
