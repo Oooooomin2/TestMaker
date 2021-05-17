@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DDDTest.Tests.ViewModelData
 {
-    internal static class HomeIndexViewModelTestData
+    internal static class HomeViewModelTestData
     {
         internal static HomeViewModel HomeIndexViewModelData()
         {

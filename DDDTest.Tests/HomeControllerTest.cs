@@ -14,7 +14,7 @@ namespace DDDTest.Tests
         [Fact]
         public void Access_homeIndex_db()
         {
-            var viewModel = HomeIndexViewModelTestData.HomeIndexViewModelData();
+            var viewModel = HomeViewModelTestData.HomeIndexViewModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
                 .UseInMemoryDatabase(databaseName: "Access_homeIndex_db")
                 .Options;
@@ -56,7 +56,7 @@ namespace DDDTest.Tests
         [Fact]
         public void Access_homeIndex_check_viewData()
         {
-            var viewModel = HomeIndexViewModelTestData.HomeIndexViewModelData();
+            var viewModel = HomeViewModelTestData.HomeIndexViewModelData();
             var options = new DbContextOptionsBuilder<TestMakerContext>()
                 .UseInMemoryDatabase(databaseName: "Access_homeIndex_check_viewData")
                 .Options;
