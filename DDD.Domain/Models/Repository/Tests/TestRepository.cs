@@ -1,12 +1,12 @@
 ﻿using DDD.Domain.Data;
-using DDD.Domain.Model.Interface;
+using DDD.Domain.Model.Interface.Tests;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace DDD.Domain.Models.Repository
+namespace DDD.Domain.Models.Repository.Tests
 {
     public class TestRepository : GenericRepository<Test>, ITestRepository
     {

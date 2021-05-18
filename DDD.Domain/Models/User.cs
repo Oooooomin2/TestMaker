@@ -9,7 +9,7 @@ namespace DDD.Domain.Models
         public int UserId { get; set; }
         [Required]
         [EmailAddress]
-        public string LoginId { get; set; }
+        public virtual string LoginId { get; set; }
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]

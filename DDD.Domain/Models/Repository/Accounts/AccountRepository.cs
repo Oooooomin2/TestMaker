@@ -1,9 +1,10 @@
 ﻿using DDD.Domain.Data;
-using DDD.Domain.Model.Interface;
+using DDD.Domain.Model.Interface.Accounts;
 using DDD.Domain.Models;
+using DDD.Domain.ViewModels.Accounts;
 using System.Linq;
 
-namespace DDD.Domain.Model.Repository
+namespace DDD.Domain.Model.Repository.Accounts
 {
     public class AccountRepository : IAccountRepository
     {
@@ -14,7 +15,7 @@ namespace DDD.Domain.Model.Repository
             _context = context;
         }
 
-        public User GetSelectedUser(Login loginUser)
+        public User GetSelectedUser(AccountLoginViewModel loginUser)
         {
             return _context.Users.SingleOrDefault(o => o.LoginId == loginUser.LoginId);
         }

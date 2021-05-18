@@ -1,5 +1,5 @@
 ﻿using DDD.Domain.Models;
-using DDD.Domain.Models.ViewModels;
+using DDD.Domain.ViewModels.Home;
 using System;
 using System.Collections.Generic;
 

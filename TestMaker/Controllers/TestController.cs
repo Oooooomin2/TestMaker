@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DDD.Domain.Model.Interface;
+using DDD.Domain.Model.Interface.Tests;
 using DDD.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,7 @@ namespace TestMaker.Controllers
             ViewData["Title"] = "Details";
             ViewData["Action"] = "Details";
             ViewData["Controller"] = "Test";
+            var t = _testRepository.GetContent(o => o.TestId == id);
             return View(_testRepository.GetContent(o => o.TestId == id));
         }
 

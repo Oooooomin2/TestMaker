@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using DDD.Domain.Data;
-using DDD.Domain.Model.Interface;
-using DDD.Domain.Models.ViewModels;
+using DDD.Domain.Model.Interface.Home;
+using DDD.Domain.ViewModels.Home;
 
-namespace DDD.Domain.Model.Repository
+namespace DDD.Domain.Model.Repository.Home
 {
     public class HomeRepository : IHomeRepository
     {

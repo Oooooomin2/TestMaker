@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace DDD.Domain.Model.Interface
+namespace DDD.Domain.Model.Interface.Tests
 {
     public interface ITestRepository : IRepository<Test>
     {

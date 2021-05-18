@@ -1,4 +1,4 @@
-namespace DDD.Domain.Models.ViewModels
+namespace DDD.Domain.ViewModels
 {
     public class ErrorViewModel
     {

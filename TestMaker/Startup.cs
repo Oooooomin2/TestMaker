@@ -9,9 +9,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.CookiePolicy;
 using DDD.Domain.Model.Interface;
-using DDD.Domain.Model.Repository;
+using DDD.Domain.Model.Repository.Home;
 using DDD.Domain.Data;
 using DDD.Domain.Models.Repository;
+using DDD.Domain.Model.Interface.Home;
+using DDD.Domain.Model.Interface.Users;
+using DDD.Domain.Model.Interface.Tests;
+using DDD.Domain.Model.Interface.Accounts;
+using DDD.Domain.Models.Repository.Tests;
+using DDD.Domain.Model.Repository.Users;
+using DDD.Domain.Model.Repository.Accounts;
 
 namespace TestMaker
 {

@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using DDD.Domain.Model.Interface;
+using DDD.Domain.Helper;
+using DDD.Domain.Model.Interface.Accounts;
 using DDD.Domain.Models;
+using DDD.Domain.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -27,19 +29,11 @@ namespace TestMaker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("LoginId,Password")] Login loginUser, string returnUrl = null)
+        public async Task<IActionResult> Login([Bind("LoginId,Password")] AccountLoginViewModel loginUser, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
                 var userInfo = _accountRepository.GetSelectedUser(loginUser);
-                if(userInfo == null)
-                {
-                    ModelState.AddModelError("LoginId", "The LoginId is unregistered");
-                    ViewData["Action"] = "Login";
-                    ViewData["Controller"] = "Account";
-                    ViewData["Title"] = "Login";
-                    return View(loginUser);
-                }
                 var inputHashText = Password.CreateHashTextBase64(userInfo.Salt, loginUser.Password);
                 if (userInfo.Password == inputHashText)
                 {
