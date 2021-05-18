@@ -1,6 +1,6 @@
 using DDD.Domain.Data;
-using DDD.Domain.Model.Interface;
-using DDD.Domain.Models.Repository;
+using DDD.Domain.Model.Interface.Tests;
+using DDD.Domain.Models.Repository.Tests;
 using DDDTest.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

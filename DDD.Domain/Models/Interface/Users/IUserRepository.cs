@@ -3,13 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace DDD.Domain.Model.Interface
+namespace DDD.Domain.Model.Interface.Users
 {
     public interface IUserRepository : IRepository<User>
     {
         public User FindUser(int? id);
-
-        public bool LoginIdExists(User user);
 
         public User GetContent(Expression<Func<User, bool>> expression);
 

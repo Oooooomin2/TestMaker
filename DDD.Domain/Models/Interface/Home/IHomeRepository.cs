@@ -1,6 +1,6 @@
-﻿using DDD.Domain.Models.ViewModels;
+﻿using DDD.Domain.ViewModels.Home;
 
-namespace DDD.Domain.Model.Interface
+namespace DDD.Domain.Model.Interface.Home
 {
     public interface IHomeRepository
     {

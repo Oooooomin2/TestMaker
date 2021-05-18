@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDD.Domain.Migrations
 {
     [DbContext(typeof(TestMakerContext))]
-    [Migration("20210517003650_Initial")]
+    [Migration("20210518010654_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,11 +97,9 @@ namespace DDD.Domain.Migrations
                         .HasColumnType("BLOB");
 
                     b.Property<string>("LoginId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Salt")

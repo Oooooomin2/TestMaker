@@ -1,5 +1,5 @@
-﻿using DDD.Domain.Model.Interface;
-using DDD.Domain.Models.ViewModels;
+﻿using DDD.Domain.Model.Interface.Home;
+using DDD.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

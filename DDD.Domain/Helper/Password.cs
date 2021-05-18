@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace DDD.Domain.Models
+namespace DDD.Domain.Helper
 {
     public static class Password
     {

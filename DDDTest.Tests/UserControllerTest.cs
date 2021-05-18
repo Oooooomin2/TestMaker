@@ -1,6 +1,7 @@
 using DDD.Domain.Data;
-using DDD.Domain.Model.Interface;
-using DDD.Domain.Model.Repository;
+using DDD.Domain.Model.Interface.Users;
+using DDD.Domain.Model.Repository.Users;
+using DDD.Domain.ViewModels.Users;
 using DDDTest.Tests.ViewModelData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -95,23 +96,6 @@ namespace DDDTest.Tests
             Assert.Equal("User's information", view.ViewData["Title"]);
             Assert.Equal("Details", view.ViewData["Action"]);
             Assert.Equal("User", view.ViewData["Controller"]);
-        }
-
-        [Fact]
-        public void Access_UserCreate_Check_DuplicateUser()
-        {
-            var model = UserModelTestData.UserModelData();
-            var options = new DbContextOptionsBuilder<TestMakerContext>()
-                .UseInMemoryDatabase(databaseName: "Access_UserCreate_Check_DuplicateUser")
-                .Options;
-            using var _context = new TestMakerContext(options);
-            _context.Users.Add(model);
-            _context.SaveChanges();
-            IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
-            var view = controller.Create(model) as ViewResult;
-            Assert.False(view.ViewData.ModelState.IsValid);
-            Assert.Equal("The LoginId is unregistered", view.ViewData.ModelState["LoginId"].Errors[0].ErrorMessage);
         }
 
         [Fact]

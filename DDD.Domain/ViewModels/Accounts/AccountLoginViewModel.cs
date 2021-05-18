@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DDD.Domain.Validations;
+using System.ComponentModel.DataAnnotations;
 
-namespace DDD.Domain.Models
+namespace DDD.Domain.ViewModels.Accounts
 {
-    public class Login
+    public class AccountLoginViewModel
     {
         [Required]
         [EmailAddress]
+        [LoginIdExists]
         public string LoginId { get; set; }
         [Required]
         [DataType(DataType.Password)]

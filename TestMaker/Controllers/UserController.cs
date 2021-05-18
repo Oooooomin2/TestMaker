@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using DDD.Domain.Model.Interface;
+using DDD.Domain.Helper;
+using DDD.Domain.Model.Interface.Users;
 using DDD.Domain.Models;
+using DDD.Domain.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -58,16 +60,8 @@ namespace TestMaker.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] User user)
+        public IActionResult Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] UserCreateViewModel user)
         {
-            if(_userRepository.LoginIdExists(user))
-            {
-                ViewData["Title"] = "Create";
-                ViewData["Action"] = "Create";
-                ViewData["Controller"] = "User";
-                ModelState.AddModelError("LoginId", "The LoginId is unregistered");
-                return View(user);
-            }
             if (ModelState.IsValid)
             {
                 user.Salt = Password.CreateSaltBase64();

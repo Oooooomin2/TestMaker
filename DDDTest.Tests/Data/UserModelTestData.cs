@@ -1,12 +1,13 @@
 ﻿using DDD.Domain.Models;
+using DDD.Domain.ViewModels.Users;
 
 namespace DDDTest.Tests.ViewModelData
 {
     internal static class UserModelTestData
     {
-        internal static User UserModelData()
+        internal static UserCreateViewModel UserModelData()
         {
-            return new User
+            return new UserCreateViewModel
             {
                 LoginId = "test@testmail.com",
                 UserName = "testuser",
@@ -18,9 +19,9 @@ namespace DDDTest.Tests.ViewModelData
             };
         }
 
-        internal static User UserCreateData()
+        internal static UserCreateViewModel UserCreateData()
         {
-            return new User
+            return new UserCreateViewModel
             {
                 LoginId = "test2@testmail.com",
                 UserName = "testuser2",
