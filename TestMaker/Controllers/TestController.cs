@@ -2,6 +2,7 @@
 using System.Linq;
 using DDD.Domain.Model.Interface.Tests;
 using DDD.Domain.Models;
+using DDD.Domain.ViewModels.Tests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,13 +49,18 @@ namespace TestMaker.Controllers
         }
 
         // GET: Test/Create
-        public IActionResult Create([FromQuery]string title,[FromQuery]string number)
+        public IActionResult Create([FromQuery]TestSetSettingsViewModel testSetSettingsViewModel)
         {
-            ViewData["Title"] = title;
-            ViewData["Number"] = number;
-            ViewData["Action"] = "Create";
-            ViewData["Controller"] = "Test";
-            return View();
+            if (ModelState.IsValid)
+            {
+                ViewData["Title"] = testSetSettingsViewModel.Title;
+                ViewData["Number"] = testSetSettingsViewModel.Number;
+                ViewData["Action"] = "Create";
+                ViewData["Controller"] = "Test";
+                return View();
+            }
+
+            return View("SetSettings");
         }
 
         // POST: Test/Create

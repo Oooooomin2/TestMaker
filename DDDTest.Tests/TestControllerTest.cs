@@ -1,6 +1,7 @@
 using DDD.Domain.Data;
 using DDD.Domain.Model.Interface.Tests;
 using DDD.Domain.Models.Repository.Tests;
+using DDD.Domain.ViewModels.Tests;
 using DDDTest.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -156,9 +157,13 @@ namespace DDDTest.Tests
         public void Access_TestCreate_check_viewData()
         {
             var controller = new TestController(null);
-            var view = controller.Create("CreateMethodTest", "1") as ViewResult;
+            var view = controller.Create(new TestSetSettingsViewModel
+            {
+                Title = "CreateMethodTest",
+                Number= 1
+            }) as ViewResult;
             Assert.Equal("CreateMethodTest", view.ViewData["Title"]);
-            Assert.Equal("1", view.ViewData["Number"]);
+            Assert.Equal(1, view.ViewData["Number"]);
             Assert.Equal("Create", view.ViewData["Action"]);
             Assert.Equal("Test", view.ViewData["Controller"]);
         }

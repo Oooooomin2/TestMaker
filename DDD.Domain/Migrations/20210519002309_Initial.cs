@@ -13,9 +13,9 @@ namespace DDD.Domain.Migrations
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    LoginId = table.Column<string>(type: "TEXT", nullable: true),
+                    LoginId = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    Password = table.Column<string>(type: "TEXT", nullable: true),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
                     Salt = table.Column<string>(type: "TEXT", nullable: true),
                     SelfIntroduction = table.Column<string>(type: "TEXT", nullable: true),
                     Icon = table.Column<byte[]>(type: "BLOB", nullable: true)
