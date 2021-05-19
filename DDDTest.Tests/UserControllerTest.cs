@@ -1,3 +1,5 @@
+using AutoMapper;
+using CoreMvcAutoMapper;
 using DDD.Domain.Data;
 using DDD.Domain.Model.Interface.Users;
 using DDD.Domain.Model.Repository.Users;
@@ -39,7 +41,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var view = controller.Index() as ViewResult;
             Assert.Equal("Index", view.ViewData["Title"]);
             Assert.Equal("Index", view.ViewData["Action"]);
@@ -57,7 +64,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -91,7 +103,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var view = controller.Details(1) as ViewResult;
             Assert.Equal("User's information", view.ViewData["Title"]);
             Assert.Equal("Details", view.ViewData["Action"]);
@@ -109,7 +126,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult =  controller.Create(UserModelTestData.UserCreateData()) as RedirectToActionResult;
             Assert.Equal("Login", actionResult.ActionName);
             Assert.Equal("Account", actionResult.ControllerName);
@@ -118,7 +140,12 @@ namespace DDDTest.Tests
         [Fact]
         public void Access_UserCreate_check_viewData()
         {
-            var controller = new UserController(null);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(null, mapper);
             var view = controller.Create() as ViewResult;
             Assert.Equal("Create", view.ViewData["Title"]);
             Assert.Equal("Create", view.ViewData["Action"]);
@@ -136,7 +163,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult = controller.Edit(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -152,7 +184,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var view = controller.Edit(1) as ViewResult;
             Assert.Equal("Edit", view.ViewData["Title"]);
             Assert.Equal("Edit", view.ViewData["Action"]);
@@ -190,7 +227,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult = controller.Edit(999999, model);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -206,7 +248,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult = controller.Details(null);
             Assert.IsType<NotFoundResult>(actionResult);
         }
@@ -222,7 +269,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var view = controller.Delete(1) as ViewResult;
             Assert.Equal("Delete", view.ViewData["Title"]);
             Assert.Equal("Delete", view.ViewData["Action"]);
@@ -240,7 +292,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             var actionResult = controller.DeleteConfirmed(1) as RedirectToActionResult;
             Assert.Equal("Index", actionResult.ActionName);
             Assert.Equal("Home", actionResult.ControllerName);
@@ -258,7 +315,12 @@ namespace DDDTest.Tests
             _context.SaveChanges();
             Assert.Equal(1, _context.Users.Count());
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             controller.DeleteConfirmed(1);
             Assert.Equal(0, _context.Users.Count());
         }
@@ -289,7 +351,12 @@ namespace DDDTest.Tests
             _context.Users.Add(model);
             _context.SaveChanges();
             IUserRepository userRepository = new UserRepository(_context);
-            var controller = new UserController(userRepository);
+            var testMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperConfig());
+            });
+            var mapper = testMapper.CreateMapper();
+            var controller = new UserController(userRepository, mapper);
             controller.ModelState.AddModelError("error", "some error");
             var view =  controller.ChangePassword(model) as ViewResult;
             Assert.Equal("Change password", view.ViewData["Title"]);

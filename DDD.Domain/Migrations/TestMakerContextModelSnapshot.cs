@@ -95,9 +95,11 @@ namespace DDD.Domain.Migrations
                         .HasColumnType("BLOB");
 
                     b.Property<string>("LoginId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Salt")

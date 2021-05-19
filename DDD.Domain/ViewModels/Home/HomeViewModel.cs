@@ -5,7 +5,7 @@ namespace DDD.Domain.ViewModels.Home
 {
     public class HomeViewModel
     {
-        public IReadOnlyList<Models.Test> Tests { get; set; }
+        public IReadOnlyList<Test> Tests { get; set; }
         public IReadOnlyList<User> Users { get; set; }
     }
 }

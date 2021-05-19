@@ -19,6 +19,8 @@ using DDD.Domain.Model.Interface.Accounts;
 using DDD.Domain.Models.Repository.Tests;
 using DDD.Domain.Model.Repository.Users;
 using DDD.Domain.Model.Repository.Accounts;
+using CoreMvcAutoMapper;
+using AutoMapper;
 
 namespace TestMaker
 {
@@ -58,6 +60,11 @@ namespace TestMaker
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
+
+            services.AddAutoMapper(cfg => {
+                cfg.AddProfile<AutoMapperConfig>();
+            });
+            services.AddSingleton<IMapper, Mapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

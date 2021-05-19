@@ -5,9 +5,9 @@ namespace DDDTest.Tests.ViewModelData
 {
     internal static class UserModelTestData
     {
-        internal static UserCreateViewModel UserModelData()
+        internal static User UserModelData()
         {
-            return new UserCreateViewModel
+            return new User
             {
                 LoginId = "test@testmail.com",
                 UserName = "testuser",
@@ -27,9 +27,7 @@ namespace DDDTest.Tests.ViewModelData
                 UserName = "testuser2",
                 Password = "123456",
                 ConfirmPassword = "123456",
-                Salt = "",
-                SelfIntroduction = "this is a self introduction2.",
-                Icon = new byte[] { 0x01 }
+                Salt = ""
             };
         }
     }

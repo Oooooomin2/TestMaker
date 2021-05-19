@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using AutoMapper;
 using DDD.Domain.Helper;
 using DDD.Domain.Model.Interface.Users;
 using DDD.Domain.Models;
@@ -18,10 +19,12 @@ namespace TestMaker.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         // GET: Users
@@ -60,19 +63,20 @@ namespace TestMaker.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] UserCreateViewModel user)
+        public IActionResult Create([Bind("UserId,LoginId,UserName,Password,ConfirmPassword")] UserCreateViewModel userViewModel)
         {
             if (ModelState.IsValid)
             {
-                user.Salt = Password.CreateSaltBase64();
-                user.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(user.Salt), user.Password);
+                userViewModel.Salt = Password.CreateSaltBase64();
+                userViewModel.Password = Password.CreatePasswordHashBase64(Convert.FromBase64String(userViewModel.Salt), userViewModel.Password);
+                var user = _mapper.Map<UserCreateViewModel, User>(userViewModel);
                 _userRepository.Create(user);
                 return RedirectToAction("Login", "Account");
             }
             ViewData["Title"] = "Create";
             ViewData["Action"] = "Create";
             ViewData["Controller"] = "User";
-            return View(user);
+            return View(userViewModel);
         }
 
         // GET: Users/Edit/5
