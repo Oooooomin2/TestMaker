@@ -19,4 +19,4 @@ Release is a little bit later...
 ![scoreTest](https://user-images.githubusercontent.com/63548353/118271319-0f840280-b4fc-11eb-8dd7-562e711d9760.png)  
 
 ## Technology
-C# | ASP.NET 5.0 MVC | Entity Framework Core | xUnit | TypeScript | Bootstrap | Html/CSS | SQLite
+C# | ASP.NET 5.0(WebAPI) | Entity Framework Core | Angular | TypeScript | Bootstrap | Html/CSS | SQLite
