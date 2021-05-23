@@ -3,17 +3,17 @@
 <hr />
 <div class="row">
   <div class="col-md-6">
-    <form>
+    <form action="/test/create">
       <div class="form-group">
         <label for="title" class="control-label">Title</label>
-        <input type="text" name="title" class="form-control" />
+        <input [(ngModel)]="title" type="text" name="title" class="form-control" />
       </div>
       <div class="form-group">
         <label for="number" class="control-label">Number</label>
-        <input type="number" name="number" class="form-control" />
+        <input [(ngModel)]="number" type="number" name="number" class="form-control" />
       </div>
       <div class="form-group">
-        <input type="submit" value="Next" class="btn btn-primary" />
+        <button class="btn-primary btn" (click)="moveToCreate()">Next</button>
       </div>
     </form>
   </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings-test',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./settings-test.component.css']
 })
 export class SettingsTestComponent implements OnInit {
+  title: string = '';
+  number: string = '0';
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
 
+  moveToCreate(): void {
+    if (this.title === '' || this.number === '0') return;
+    const param = {
+      title: this.title,
+      number: this.number
+    };
+    this.router.navigate(['/test/create'], { queryParams: param });
+  }
 }
