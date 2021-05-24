@@ -1,0 +1,49 @@
+<h1>{{ test.title }}</h1>
+
+<div>
+  <div class="row">
+    <div class="col-md-1 col-sm-2 col-2">
+      <a routerLink="/test/edit/{{test.testId}}" class="btn btn-primary">Edit</a>
+    </div>
+    <div class="col-md-1 col-sm-2 col-2">
+      <a routerLink="/test/delete-confirm/{{test.testId}}" class="btn btn-danger">Delete</a>
+    </div>
+  </div>
+  <hr />
+  <form method="post">
+    <input type="hidden" value="{{test.userId}}" />
+    <input type="hidden" value="{{test.testId}}" />
+    <input type="hidden" value="{{test.number}}" />
+    <ng-container *ngFor="let q of test.questions; let i=index">
+      <input type="hidden" value="{{q.questionId}}" />
+      <div class="container">
+        <div class="mt-4 mb-1">
+          {{ i + 1 }}. {{ q.questionText }}
+        </div>
+        <div class="mb-2">
+          <ng-container *ngIf="isMultiAnswer(q.choices); else sAnswer">
+            <div *ngFor="let c of q.choices">
+              <input type="hidden" value="{{c.choiceId}}" />
+              <div>
+                <input name="q.questionId" type="checkbox" value="{{c.isUsersAnswerCheck}}" />
+                <label class="ml-2">{{ c.choiceText }}</label>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template class="data-single" #sAnswer>
+            <div *ngFor="let c of q.choices">
+              <input name="q.questionId" type="radio" value="{{c.isUsersAnswerRadio}}" />
+              <label class="ml-2">{{ c.choiceText }}</label>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+    <div class="row mt-2 ml-1">
+      <input type="submit" value="Score the test" class="btn btn-primary col-4 col-md-2" />
+    </div>
+  </form>
+</div>
+<div>
+  <a routerLink="/">Back to List</a>
+</div>

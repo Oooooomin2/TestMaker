@@ -10,19 +10,19 @@ export class TestService {
 
   constructor(private http: HttpClient) { }
 
-  getUsersTest(): Observable<any[]> {
-    return this.http.get<any>(this.apiUrl);
+  getUsersTest(id: number): any {
+    return this.http.get<any>(this.apiUrl + '/' + id);
   }
 
   addTest(val:any) {
     return this.http.post<any>(this.apiUrl, val);
   }
 
-  updateTest(val: any) {
-    return this.http.put<any>(this.apiUrl,val);
+  updateTest(val: any, id: number) {
+    return this.http.put<any>(this.apiUrl + '/' + id, val);
   }
 
-  deleteTest(val: any){
-    return this.http.delete<any>(this.apiUrl, val);
+  deleteTest(id: number){
+    return this.http.delete<any>(this.apiUrl + '/' + id);
   }
 }

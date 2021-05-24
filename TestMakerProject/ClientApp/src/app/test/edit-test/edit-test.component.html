@@ -1,0 +1,41 @@
+<h1>Edit</h1>
+
+<hr />
+<div class="row">
+  <div class="col-md-6">
+    <form>
+      <input type="hidden" value="{{test.userId}}" />
+      <input type="hidden" value="{{test.testId}}" />
+      <input type="hidden" value="{{test.number}}" />
+      <div class="form-group">
+        <label for="Title" class="control-label">Title</label>
+        <input [(ngModel)]="test.title" class="form-control" name="title" value="{{test.title}}" />
+      </div>
+      <ng-container *ngFor="let q of test.questions; let i=index">
+        <input type="hidden" value="{{q.questionId}}" />
+        <div class="form-group">
+          <label for="q.questionText" class="control-label">Question {{ i + 1 }}</label>
+          <input [(ngModel)]="q.questionText" class="form-control" name="{{q.questionText}}" value="{{q.questionText}}" />
+        </div>
+        <div class="form-group">
+          <ng-container *ngFor="let c of q.choices; let j=index">
+            <input type="hidden" value="{{ c.choiceId }}" />
+            <label class="control-label">ChoiceText {{ j + 1 }}</label>
+            <div class="form-inline">
+              <input [(ngModel)]="c.choiceText" class="form-control" name="{{c.choiceText}}" value="{{c.choiceText}}" />
+              <input [(ngModel)]="c.isAnswer" type="checkbox" class="ml-2" name="{{c.isAnswer}}" [checked]="c.isAnswer" />
+            </div>
+          </ng-container>
+        </div>
+        <hr />
+      </ng-container>
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="updateTest()">Edit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div>
+  <a routerLink="/">Back to List</a>
+</div>

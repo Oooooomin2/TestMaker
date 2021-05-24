@@ -7,21 +7,24 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { SettingsTestComponent } from './test/settings-test/settings-test.component';
 import { CreateTestComponent } from './test/create-test/create-test.component';
 import { TestService } from './test/test.service';
+import { HomeService } from './home/home.service';
+import { DetailTestComponent } from './test/detail-test/detail-test.component';
+import { EditTestComponent } from './test/edit-test/edit-test.component';
+import { DeleteTestComponent } from './test/delete-test/delete-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     SettingsTestComponent,
     CreateTestComponent,
+    DetailTestComponent,
+    EditTestComponent,
+    DeleteTestComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -29,14 +32,16 @@ import { TestService } from './test/test.service';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'test/setsettings', component: SettingsTestComponent },
       { path: 'test/create', component: CreateTestComponent },
+      { path: 'test/detail/:id', component: DetailTestComponent },
+      { path: 'test/edit/:id', component: EditTestComponent },
+      { path: 'test/delete-confirm/:id', component: DeleteTestComponent },
     ])
   ],
   providers: [
-    TestService
+    TestService,
+    HomeService
   ],
   bootstrap: [AppComponent]
 })

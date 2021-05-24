@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TestMakerProject.Controllers.Resources;
 using TestMakerProject.Models;
@@ -24,14 +22,13 @@ namespace TestMakerProject.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IEnumerable<TestResource>> GetTest(int id)
+        public async Task<TestResource> GetTest(int id)
         {
             var tests = await _context.Tests
                 .Include(m => m.Questions)
                     .ThenInclude(m => m.Choices)
-                .Where(m => m.UserId == id)
-                .ToListAsync();
-            return _mapper.Map<List<Test>, List<TestResource>>(tests);
+                .SingleOrDefaultAsync(m => m.TestId == id);
+            return _mapper.Map<Test, TestResource>(tests);
         }
 
         [HttpPost]

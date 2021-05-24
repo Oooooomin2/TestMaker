@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TestMakerProject.Controllers.Resources;
 using TestMakerProject.Models;
+using TestMakerProject.Models.ViewModels;
 
 namespace TestMakerProject.Mapping
 {
@@ -38,6 +35,12 @@ namespace TestMakerProject.Mapping
               .ForMember(o => o.IsAnswer, p => p.MapFrom(q => q.IsAnswer))
               .ForMember(o => o.IsUsersAnswerCheck, p => p.MapFrom(q => q.IsUsersAnswerCheck))
               .ForMember(o => o.IsUsersAnswerRadio, p => p.MapFrom(q => q.IsUsersAnswerRadio));
-    }
+
+            CreateMap<Test, HomeIndexViewModel>()
+                .ForMember(o => o.TestId, p => p.MapFrom(q => q.TestId))
+                .ForMember(o => o.Title, p => p.MapFrom(q => q.Title))
+                .ForMember(o => o.UpdatedTime, p => p.MapFrom(q => q.UpdatedTime.ToString("yyyy/MM/dd HH:mm:ss")))
+                .ForPath(o => o.UserName, p => p.MapFrom(q => q.User.UserName));
+        }
     }
 }

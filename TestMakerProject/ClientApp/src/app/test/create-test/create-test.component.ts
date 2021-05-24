@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute  } from '@angular/router';
+import { ActivatedRoute, Router  } from '@angular/router';
 import { Choice } from '../choice.model';
 import { Question } from '../question.model';
 import { Test } from '../test.model';
@@ -14,12 +14,13 @@ export class CreateTestComponent implements OnInit {
   test: Test = new Test();
 
   constructor(
-    private router: ActivatedRoute,
+    private activatedRouter: ActivatedRoute,
+    private router: Router,
     private service: TestService
   ) { }
 
   ngOnInit() {
-    this.router.queryParams
+    this.activatedRouter.queryParams
       .subscribe(params => {
         this.test.title = params.title;
         this.test.number = Number(params.number);
@@ -40,10 +41,9 @@ export class CreateTestComponent implements OnInit {
   }
 
   addTest() {
-    let test = this.test;
-    console.log(test);
-    return this.service.addTest(test).subscribe(res => {
+    return this.service.addTest(this.test).subscribe(res => {
       alert(res.toString());
+      this.router.navigate(['/']);
     });
   }
 }
