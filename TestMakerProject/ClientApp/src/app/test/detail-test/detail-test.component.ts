@@ -12,6 +12,8 @@ import { TestService } from '../test.service';
 })
 export class DetailTestComponent implements OnInit {
   test: Test = new Test();
+  questionNumber:number = 0;
+  score: string = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,10 +24,14 @@ export class DetailTestComponent implements OnInit {
     const testId = +this.activatedRoute.snapshot.paramMap.get('id');
     return this.service.getUsersTest(testId).subscribe(data => {
       this.test = data;
+      this.questionNumber = this.test.questions.length;
     });
   }
 
-  isMultiAnswer(arr: Choice[]): boolean {
-    return arr.filter(i => i.isAnswer).length > 1;
+  scoreTest() {
+    const testId = +this.activatedRoute.snapshot.paramMap.get('id');
+    return this.service.scoreTest(this.test, testId).subscribe(data => {
+      this.score = data;
+    });
   }
 }

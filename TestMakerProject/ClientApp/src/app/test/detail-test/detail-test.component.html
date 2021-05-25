@@ -21,26 +21,22 @@
           {{ i + 1 }}. {{ q.questionText }}
         </div>
         <div class="mb-2">
-          <ng-container *ngIf="isMultiAnswer(q.choices); else sAnswer">
+          <ng-container>
             <div *ngFor="let c of q.choices">
               <input type="hidden" value="{{c.choiceId}}" />
               <div>
-                <input name="q.questionId" type="checkbox" value="{{c.isUsersAnswerCheck}}" />
+                <input name="q.questionId" type="checkbox" [(ngModel)]="c.isUsersAnswerCheck" />
                 <label class="ml-2">{{ c.choiceText }}</label>
               </div>
             </div>
           </ng-container>
-          <ng-template class="data-single" #sAnswer>
-            <div *ngFor="let c of q.choices">
-              <input name="q.questionId" type="radio" value="{{c.isUsersAnswerRadio}}" />
-              <label class="ml-2">{{ c.choiceText }}</label>
-            </div>
-          </ng-template>
         </div>
       </div>
     </ng-container>
     <div class="row mt-2 ml-1">
-      <input type="submit" value="Score the test" class="btn btn-primary col-4 col-md-2" />
+      <button class="btn btn-primary col-4 col-md-2" (click)="scoreTest()">Score the test</button>
+      <div class="align-items-center d-flex col-2 text-danger" *ngIf="score !== '';">{{ score }} / {{ questionNumber }} Correct!!</div>
+
     </div>
   </form>
 </div>

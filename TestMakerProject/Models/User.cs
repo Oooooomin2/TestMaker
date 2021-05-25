@@ -13,9 +13,6 @@ namespace TestMakerProject.Models
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [RegularExpression(
-            @"/^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,16}$/i"
-            , ErrorMessage = "Please input using half-width English numbers, using more than 8 characters but less than 16.")]
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]

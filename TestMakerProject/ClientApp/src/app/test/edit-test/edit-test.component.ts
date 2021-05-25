@@ -20,14 +20,12 @@ export class EditTestComponent implements OnInit {
   ngOnInit() {
     const testId = +this.activatedRoute.snapshot.paramMap.get('id');
     return this.service.getUsersTest(testId).subscribe(data => {
-      console.log(data);
       this.test = data;
     });
   }
 
   updateTest() {
     return this.service.updateTest(this.test, this.test.testId).subscribe(res => {
-      alert(res.toString());
       this.router.navigate(['/']);
     });
   }

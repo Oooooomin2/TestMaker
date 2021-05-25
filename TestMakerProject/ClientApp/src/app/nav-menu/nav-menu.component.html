@@ -23,12 +23,32 @@
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+            <a class="nav-link text-dark" [routerLink]="['/']" *ngIf="authenticated()">Home</a>
           </li>
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/test/setsettings']">Create Test</a>
+            <a class="nav-link text-dark" [routerLink]="['/test/setsettings']" *ngIf="authenticated()">Create Test</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" routerLink="/user/edit/{{userId}}" *ngIf="authenticated()">{{ userName }}</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/account/login']" *ngIf="!authenticated()">Login</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/user/create']" *ngIf="!authenticated()">New user regist</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" style="cursor:pointer;" (click)="logout()" *ngIf="authenticated()">Logout</a>
           </li>
         </ul>
       </div>

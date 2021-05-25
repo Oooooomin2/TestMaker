@@ -1,0 +1,30 @@
+<h1>Edit user's information</h1>
+
+<hr />
+<div class="row">
+  <div class="col-md-5">
+    <form>
+      <div class="form-group">
+        <label class="control-label">LoginId</label>
+        <input name="LoginId" class="form-control" readonly [(ngModel)]="user.loginId" />
+      </div>
+      <div class="form-group">
+        <label class="control-label">User name</label>
+        <input name="UserName" class="form-control" [(ngModel)]="user.userName" />
+      </div>
+      <div class="form-group">
+        <label class="control-label">Password</label>
+        <input type="password" name="Password" class="form-control" [(ngModel)]="user.password" />
+      </div>
+      <div class="form-group">
+        <label class="control-label">Confirm password</label>
+        <input type="password" class="form-control" [(ngModel)]="user.confirmPassword" name="confirmPassword" />
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="updateUser()">Edit</button>
+        <a class="btn btn-danger ml-2" routerLink="/user/delete-confirm/{{ user.userId }}">Delete</a>
+      </div>
+    </form>
+  </div>
+</div>
+

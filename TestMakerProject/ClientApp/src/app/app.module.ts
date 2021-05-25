@@ -14,6 +14,13 @@ import { HomeService } from './home/home.service';
 import { DetailTestComponent } from './test/detail-test/detail-test.component';
 import { EditTestComponent } from './test/edit-test/edit-test.component';
 import { DeleteTestComponent } from './test/delete-test/delete-test.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth.guard';
+import { LoginService } from './login/login.service';
+import { CreateUserComponent } from './user/create-user/create-user.component';
+import { UserService } from './user/user.service';
+import { EditUserComponent } from './user/edit-user/edit-user.component';
+import { DeleteUserComponent } from './user/delete-user/delete-user.component';
 
 @NgModule({
   declarations: [
@@ -25,23 +32,34 @@ import { DeleteTestComponent } from './test/delete-test/delete-test.component';
     DetailTestComponent,
     EditTestComponent,
     DeleteTestComponent,
+    LoginComponent,
+    CreateUserComponent,
+    EditUserComponent,
+    DeleteUserComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'test/setsettings', component: SettingsTestComponent },
-      { path: 'test/create', component: CreateTestComponent },
-      { path: 'test/detail/:id', component: DetailTestComponent },
-      { path: 'test/edit/:id', component: EditTestComponent },
-      { path: 'test/delete-confirm/:id', component: DeleteTestComponent },
-    ])
+      { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+      { path: 'test/setsettings', component: SettingsTestComponent, canActivate: [AuthGuard] },
+      { path: 'test/create', component: CreateTestComponent, canActivate: [AuthGuard] },
+      { path: 'test/detail/:id', component: DetailTestComponent, canActivate: [AuthGuard] },
+      { path: 'test/edit/:id', component: EditTestComponent, canActivate: [AuthGuard] },
+      { path: 'test/delete-confirm/:id', component: DeleteTestComponent, canActivate: [AuthGuard] },
+      { path: 'account/login', component: LoginComponent },
+      { path: 'user/create', component: CreateUserComponent },
+      { path: 'user/edit/:id', component: EditUserComponent, canActivate: [AuthGuard] },
+      { path: 'user/delete-confirm/:id', component: DeleteUserComponent, canActivate: [AuthGuard] }
+    ]),
   ],
   providers: [
     TestService,
-    HomeService
+    HomeService,
+    LoginService,
+    UserService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

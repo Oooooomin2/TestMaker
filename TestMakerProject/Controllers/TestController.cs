@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TestMakerProject.Controllers.Resources;
 using TestMakerProject.Models;
@@ -78,6 +80,31 @@ namespace TestMakerProject.Controllers
             _context.Remove(test);
             await _context.SaveChangesAsync();
             return Ok(id);
+        }
+
+        [Route("score/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> PostScore(int id, [FromBody] Test test)
+        {
+            var tests = await _context.Tests
+                .Include(m => m.Questions)
+                    .ThenInclude(m => m.Choices)
+                .SingleOrDefaultAsync(m => m.TestId == id);
+            var correctCount = 0;
+            foreach (var t in test.Questions)
+            {
+                var question = tests.Questions.SingleOrDefault(o => o.QuestionId == t.QuestionId);
+                var answers = question.Choices
+                        .Where(o => o.IsAnswer)
+                        .Select(o => o.ChoiceId);
+                var usersAnswers = t.Choices
+                    .Where(o => o.IsUsersAnswerCheck)
+                    .Select(o => o.ChoiceId);
+
+                if (answers.SequenceEqual(usersAnswers))
+                    correctCount++;
+            }
+            return Ok(correctCount);
         }
     }
 }
