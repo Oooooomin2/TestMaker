@@ -8,6 +8,7 @@ namespace DDD.Domain.Data
         public TestMakerContext (DbContextOptions<TestMakerContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<Test> Tests { get; set; }
