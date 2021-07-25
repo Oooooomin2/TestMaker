@@ -13,9 +13,7 @@ COPY ["DDD.Domain/DDD.Domain.csproj", "DDD.Domain/"]
 RUN dotnet restore "TestMaker/TestMaker.csproj"
 COPY . .
 WORKDIR "/src/TestMaker"
-RUN apt-get update \
- && apt-get -y install nodejs \
- && dotnet build "TestMaker.csproj" -c Release -o /app/build
+RUN dotnet build "TestMaker.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "TestMaker.csproj" -c Release -o /app/publish
